@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-06T12:15:39.007166+00:00",
+  "last_updated": "2026-06-06T12:21:56.026221+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -137,7 +137,7 @@
       "droneDanger": false
     },
     "Волгоградская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -152,7 +152,7 @@
       "droneDanger": false
     },
     "Марий Эл": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -167,17 +167,17 @@
       "droneDanger": false
     },
     "Удмуртская Республика": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
     "Самарская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
     "Саратовская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -187,17 +187,17 @@
       "droneDanger": false
     },
     "Свердловская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
     "Челябинская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
     "Курганская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
