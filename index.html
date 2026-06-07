@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Air Alert Map — Тревоги РФ</title>
+    <title>Air Alert Map — Тревоги РФ (скриншот + прогноз)</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0e1a;
             font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             overflow: hidden;
-            transition: background 0.3s ease, color 0.2s ease;
+            transition: background 0.3s ease;
         }
+        /* Светлая тема */
         body.light-theme { background: #eef2f5; }
         body.light-theme .clock,
         body.light-theme .legend,
         body.light-theme .update-info,
         body.light-theme .ruler-panel,
+        body.light-theme .forecast-panel,
         body.light-theme .alerts-panel,
         body.light-theme .toolbar,
         body.light-theme .settings-modal {
@@ -31,14 +34,16 @@
         body.light-theme .alert-region-item { background: rgba(0, 0, 0, 0.05); }
         body.light-theme .region-name { color: #111; }
         body.light-theme .legend { color: #1a1e2c; }
+        body.light-theme .forecast-panel { color: #111; }
+        body.light-theme .forecast-item { background: rgba(0, 0, 0, 0.05); }
         
         .clock {
             position: fixed; top: 20px; right: 80px; z-index: 2000;
             background: rgba(10,14,26,0.85); backdrop-filter: blur(8px);
-            border-radius: 20px; padding: 8px 18px; color: #e8eef2;
+            border-radius: 20px; padding: 8px 18px;
             font-family: monospace; text-align: center; border: 1px solid rgba(255,255,255,0.15);
         }
-        .time-main { font-size: 1.8rem; font-weight: 600; line-height: 1; background: linear-gradient(135deg, #fff, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .time-main { font-size: 1.8rem; font-weight: 600; background: linear-gradient(135deg, #fff, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .date { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; }
 
         .settings-gear {
@@ -54,7 +59,7 @@
         .legend {
             position: fixed; bottom: 20px; left: 20px; z-index: 2000;
             background: rgba(10,14,26,0.85); backdrop-filter: blur(8px);
-            border-radius: 12px; padding: 10px 16px; color: #e8eef2; font-size: 0.75rem;
+            border-radius: 12px; padding: 10px 16px; font-size: 0.75rem;
             border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px;
             pointer-events: none;
         }
@@ -65,7 +70,7 @@
             position: fixed; bottom: 20px; right: 20px; z-index: 2000;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.2); border-radius: 40px;
-            padding: 6px 16px; color: #ccc; font-size: 0.75rem; font-family: monospace;
+            padding: 6px 16px; color: #ccc; font-size: 0.75rem;
             pointer-events: none;
         }
 
@@ -74,8 +79,7 @@
             background: rgba(220,53,69,0.9); backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.3); border-radius: 40px;
             padding: 8px 18px; color: white; font-size: 0.9rem; font-weight: bold;
-            cursor: pointer; font-family: monospace; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            transition: 0.2s;
+            cursor: pointer; transition: 0.2s;
         }
         .alert-list-btn:hover { background: #b02a37; transform: scale(1.02); }
 
@@ -83,15 +87,15 @@
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
             z-index: 2000; display: flex; gap: 12px;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
-            padding: 8px 16px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 16px; border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .tool-btn {
             background: rgba(30,35,50,0.9); border: none; color: white;
             padding: 6px 16px; border-radius: 30px; font-size: 0.85rem;
             font-weight: bold; cursor: pointer; transition: 0.2s;
-            font-family: monospace; display: flex; align-items: center; gap: 6px;
+            display: flex; align-items: center; gap: 6px;
         }
-        .tool-btn.active { background: #28a745; box-shadow: 0 0 8px #28a745; }
         .tool-btn:hover { background: #28a745; transform: scale(1.02); }
         .tool-btn.danger { background: #dc3545; }
         .tool-btn.danger:hover { background: #b02a37; }
@@ -101,24 +105,34 @@
             background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
             border-radius: 16px; padding: 12px 18px; width: 260px;
             border: 1px solid rgba(255,255,255,0.2); display: none;
-            flex-direction: column; gap: 10px; font-family: monospace;
+            flex-direction: column; gap: 10px;
         }
         .ruler-panel.show { display: flex; }
-        .ruler-panel h4 { margin: 0 0 5px 0; color: #ffc107; font-size: 1rem; }
-        .threat-select {
-            background: #1a1f2e; color: white; border: 1px solid #555;
-            padding: 6px; border-radius: 8px; font-size: 0.8rem;
-        }
+        .ruler-panel h4 { margin: 0 0 5px 0; color: #ffc107; }
+        .threat-select { background: #1a1f2e; color: white; border: 1px solid #555; padding: 6px; border-radius: 8px; }
         .distance-info { background: #00000055; padding: 8px; border-radius: 8px; margin-top: 5px; }
-        .distance-info p { margin: 4px 0; font-size: 0.75rem; }
         .time-result { font-size: 1.1rem; font-weight: bold; color: #ffc107; text-align: center; }
+
+        /* Панель прогноза */
+        .forecast-panel {
+            position: fixed; top: 80px; right: 20px; z-index: 2100;
+            background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
+            border-radius: 16px; padding: 12px 18px;
+            width: 260px; border: 1px solid rgba(255,215,0,0.5);
+            display: flex; flex-direction: column; gap: 10px;
+            pointer-events: none;
+        }
+        .forecast-panel h4 { margin: 0; color: #ffc107; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+        .forecast-list { max-height: 200px; overflow-y: auto; font-size: 0.8rem; }
+        .forecast-item { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .forecast-empty { color: #aaa; font-style: italic; font-size: 0.75rem; text-align: center; padding: 10px; }
 
         .alerts-panel {
             position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
             background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
             z-index: 3000; transition: left 0.3s ease;
             border-right: 1px solid rgba(255,255,255,0.2);
-            display: flex; flex-direction: column; font-family: monospace;
+            display: flex; flex-direction: column;
             box-shadow: 2px 0 20px rgba(0,0,0,0.5);
         }
         .alerts-panel.open { left: 0; }
@@ -129,11 +143,7 @@
         }
         .panel-header h3 { color: #ffc107; font-size: 1.2rem; margin: 0; }
         .panel-actions { display: flex; gap: 12px; }
-        .copy-btn {
-            background: rgba(255,255,255,0.15); border: none; color: white;
-            font-size: 1.1rem; cursor: pointer; padding: 4px 10px;
-            border-radius: 20px; transition: 0.2s; font-family: monospace;
-        }
+        .copy-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 4px 10px; border-radius: 20px; cursor: pointer; }
         .copy-btn:hover { background: #28a745; }
         .close-panel { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; }
         .close-panel:hover { color: #ff6b6b; }
@@ -145,21 +155,15 @@
         .alert-region-item.rocket { border-left-color: #8B0000; }
         .alert-region-item.droneAlert { border-left-color: #dc3545; }
         .alert-region-item.droneDanger { border-left-color: #ffc107; }
-        .region-name { font-weight: bold; font-size: 1rem; margin-bottom: 5px; color: #fff; }
-        .alert-type {
-            font-size: 0.8rem; display: inline-block; padding: 2px 8px;
-            border-radius: 20px;
-        }
-        .alert-type.rocket { background: #8B000030; color: #ffaaaa; border: 1px solid #8B0000; }
-        .alert-type.droneAlert { background: #dc354520; color: #ff8888; border: 1px solid #dc3545; }
-        .alert-type.droneDanger { background: #ffc10720; color: #ffc107; border: 1px solid #ffc107; }
-        .empty-message { color: #aaa; text-align: center; padding: 30px 20px; font-style: italic; }
+        .region-name { font-weight: bold; margin-bottom: 5px; color: #fff; }
+        .alert-type { font-size: 0.8rem; display: inline-block; padding: 2px 8px; border-radius: 20px; }
+        .empty-message { color: #aaa; text-align: center; padding: 30px 20px; }
 
         .copy-toast {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
             background: #28a745; color: white; padding: 6px 16px;
-            border-radius: 30px; font-size: 0.85rem; z-index: 4000;
-            font-family: monospace; animation: fadeOut 2s forwards; pointer-events: none;
+            border-radius: 30px; animation: fadeOut 2s forwards;
+            pointer-events: none; z-index: 4000;
         }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         .custom-popup .leaflet-popup-content-wrapper { background: #1a1f2e; color: #e8eef2; border-radius: 12px; border-left: 4px solid; }
@@ -203,12 +207,13 @@
         body.device-phone .time-main { font-size: 1.2rem; }
         body.device-phone .alerts-panel { width: 85%; left: -85%; }
         body.device-phone .ruler-panel { width: 220px; top: 110px; left: 10px; }
+        body.device-phone .forecast-panel { width: 220px; top: 110px; right: 10px; }
         body.device-phone .legend { bottom: 10px; left: 10px; padding: 6px 10px; font-size: 0.65rem; }
         body.device-phone .update-info { bottom: 10px; right: 10px; padding: 4px 12px; font-size: 0.7rem; }
         body.device-phone .alert-list-btn { top: 10px; left: 10px; padding: 5px 12px; font-size: 0.75rem; }
         body.device-tablet .toolbar { top: 20px; padding: 6px 14px; }
         body.device-tablet .tool-btn { padding: 5px 14px; font-size: 0.8rem; }
-        body.device-tablet .ruler-panel { width: 250px; top: 85px; }
+        body.device-tablet .ruler-panel, body.device-tablet .forecast-panel { width: 250px; top: 85px; }
     </style>
 </head>
 <body>
@@ -216,42 +221,46 @@
 <div class="settings-gear" id="settingsGear">⚙️</div>
 <button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
-<div class="toolbar" id="toolbar">
+<div class="toolbar">
+    <button id="screenshotBtn" class="tool-btn">📸 Скриншот</button>
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
 </div>
 
 <div class="legend">
-    <div class="legend-item"><div class="legend-color" style="background: #6c757d;"></div> <span>⚪ Отбой / Спокойно</span></div>
-    <div class="legend-item"><div class="legend-color" style="background: #ffc107;"></div> <span>🟡 Опасность БПЛА</span></div>
-    <div class="legend-item"><div class="legend-color" style="background: #dc3545;"></div> <span>🔴 Тревога БПЛА (фиксация/ПВО)</span></div>
-    <div class="legend-item"><div class="legend-color" style="background: #8B0000;"></div> <span>🟤 Ракетная опасность</span></div>
+    <div class="legend-item"><div class="legend-color" style="background:#6c757d;"></div> <span>⚪ Безопасно</span></div>
+    <div class="legend-item"><div class="legend-color" style="background:#ffc107;"></div> <span>🟡 Опасность БПЛА</span></div>
+    <div class="legend-item"><div class="legend-color" style="background:#dc3545;"></div> <span>🔴 Тревога БПЛА</span></div>
+    <div class="legend-item"><div class="legend-color" style="background:#8B0000;"></div> <span>🟤 Ракетная угроза</span></div>
 </div>
 
 <div class="update-info" id="lastUpdateInfo">📅 Последнее обновление: --:--</div>
 
+<!-- Панель прогноза -->
+<div id="forecastPanel" class="forecast-panel">
+    <h4>🔮 Прогноз угроз</h4>
+    <div id="forecastList" class="forecast-list">Загрузка...</div>
+</div>
+
 <div id="rulerPanel" class="ruler-panel">
     <h4>📏 Измерение угрозы</h4>
-    <select id="threatType" class="threat-select">
-        <option value="drone">🛩 Обычный БПЛА (180 км/ч)</option>
-        <option value="jet_drone">🚀 Реактивный БПЛА (450 км/ч)</option>
+    <select id="threatType">
+        <option value="drone">🛩 БПЛА (180 км/ч)</option>
+        <option value="jet_drone">🚀 Реакт. БПЛА (450 км/ч)</option>
         <option value="cruise">✈️ Крылатая ракета (850 км/ч)</option>
-        <option value="ballistic">💥 Баллистическая ракета (9000 км/ч)</option>
+        <option value="ballistic">💥 Баллист. ракета (9000 км/ч)</option>
     </select>
     <div class="distance-info">
         <p>📏 Расстояние: <span id="distKm">0</span> км</p>
         <p>⏱ Время подлёта:</p>
         <div id="timeResult" class="time-result">—</div>
     </div>
-    <small>★ Два клика по карте → точки A и B</small>
+    <small>★ Два клика → точки A и B</small>
 </div>
 
-<div id="map" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;"></div>
+<div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0;"></div>
 <div id="alertsPanel" class="alerts-panel">
-    <div class="panel-header">
-        <h3>🚨 Регионы с тревогами</h3>
-        <div class="panel-actions"><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div>
-    </div>
+    <div class="panel-header"><h3>🚨 Активные тревоги</h3><div><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div></div>
     <div class="panel-content" id="panelContent"><div class="empty-message">Нет активных тревог</div></div>
 </div>
 
@@ -259,49 +268,133 @@
 <script>
 (function(){
     // ---------- КАРТА ----------
-    const map = L.map('map', { zoomControl: false }).setView([62, 105], 3.8);
-    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2 });
-    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd' });
+    const map = L.map('map', { zoomControl: false }).setView([62,105],3.8);
+    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd', maxZoom:10 });
+    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd' });
     let currentTile = darkTile;
     currentTile.addTo(map);
     function switchTileTheme(isLight) { map.removeLayer(currentTile); currentTile = isLight ? lightTile : darkTile; currentTile.addTo(map); }
-
+    
     // ---------- ДАННЫЕ ----------
     let polygonsLayer = null;
     let regionStatus = {};
     let lastUpdateTime = null;
-    const colors = { clear: "#6c757d", droneDanger: "#ffc107", droneAlert: "#dc3545", rocket: "#8B0000" };
+    const colors = { clear:"#6c757d", droneDanger:"#ffc107", droneAlert:"#dc3545", rocket:"#8B0000" };
     
     const allRegionNames = [
-        "Москва", "Московская область", "Санкт-Петербург", "Ленинградская область",
-        "Белгородская область", "Брянская область", "Владимирская область", "Воронежская область",
-        "Ивановская область", "Калужская область", "Костромская область", "Курская область",
-        "Липецкая область", "Нижегородская область", "Новгородская область", "Орловская область",
-        "Пензенская область", "Псковская область", "Рязанская область", "Смоленская область",
-        "Тамбовская область", "Тверская область", "Тульская область", "Ярославская область",
-        "Краснодарский край", "Ставропольский край", "Ростовская область", "Волгоградская область",
-        "Татарстан", "Башкортостан", "Марий Эл", "Чувашская Республика", "Республика Мордовия",
-        "Удмуртская Республика", "Самарская область", "Саратовская область", "Ульяновская область",
-        "Свердловская область", "Челябинская область", "Курганская область", "Оренбургская область",
-        "Пермский край", "Новосибирская область", "Томская область", "Кемеровская область",
-        "Иркутская область", "Красноярский край", "Алтайский край", "Забайкальский край",
-        "Приморский край", "Хабаровский край", "Амурская область", "Сахалинская область",
-        "Магаданская область", "Камчатский край", "Мурманская область", "Крым", "Дагестан",
-        "Республика Карелия", "Республика Коми", "Республика Саха (Якутия)", "ХМАО", "ЯНАО", "Адыгея"
+        "Москва","Московская область","Санкт-Петербург","Ленинградская область",
+        "Белгородская область","Брянская область","Владимирская область","Воронежская область",
+        "Ивановская область","Калужская область","Костромская область","Курская область",
+        "Липецкая область","Нижегородская область","Новгородская область","Орловская область",
+        "Пензенская область","Псковская область","Рязанская область","Смоленская область",
+        "Тамбовская область","Тверская область","Тульская область","Ярославская область",
+        "Краснодарский край","Ставропольский край","Ростовская область","Волгоградская область",
+        "Татарстан","Башкортостан","Марий Эл","Чувашская Республика","Республика Мордовия",
+        "Удмуртская Республика","Самарская область","Саратовская область","Ульяновская область",
+        "Свердловская область","Челябинская область","Курганская область","Оренбургская область",
+        "Пермский край","Новосибирская область","Томская область","Кемеровская область",
+        "Иркутская область","Красноярский край","Алтайский край","Забайкальский край",
+        "Приморский край","Хабаровский край","Амурская область","Сахалинская область",
+        "Магаданская область","Камчатский край","Мурманская область","Крым","Дагестан",
+        "Республика Карелия","Республика Коми","Республика Саха (Якутия)","ХМАО","ЯНАО","Адыгея"
     ];
-    const ignoredRegions = ["Астраханская область", "Архангельская область", "Омская область"];
+    const ignoredRegions = ["Астраханская область","Архангельская область","Омская область"];
+    
+    // Соседние регионы для прогноза (упрощённый набор для европейской части)
+    const neighbors = {
+        "Белгородская область": ["Курская область", "Воронежская область", "Харьковская область"],
+        "Курская область": ["Белгородская область", "Орловская область", "Липецкая область", "Воронежская область"],
+        "Брянская область": ["Смоленская область", "Калужская область", "Орловская область", "Курская область"],
+        "Воронежская область": ["Белгородская область", "Курская область", "Липецкая область", "Тамбовская область", "Волгоградская область", "Ростовская область"],
+        "Липецкая область": ["Курская область", "Орловская область", "Тульская область", "Рязанская область", "Тамбовская область", "Воронежская область"],
+        "Орловская область": ["Брянская область", "Калужская область", "Тульская область", "Липецкая область", "Курская область"],
+        "Ростовская область": ["Воронежская область", "Волгоградская область", "Краснодарский край", "ДНР", "ЛНР"],
+        "Волгоградская область": ["Воронежская область", "Ростовская область", "Калмыкия", "Астраханская область"],
+        "Краснодарский край": ["Ростовская область", "Крым", "Ставропольский край"],
+        "Крым": ["Краснодарский край", "Херсонская область"],
+        "Ленинградская область": ["Санкт-Петербург", "Новгородская область", "Псковская область", "Карелия"],
+        "Псковская область": ["Ленинградская область", "Новгородская область", "Тверская область", "Смоленская область"],
+        "Новгородская область": ["Ленинградская область", "Псковская область", "Тверская область"],
+        "Тверская область": ["Новгородская область", "Псковская область", "Смоленская область", "Московская область", "Ярославская область"],
+        "Московская область": ["Тверская область", "Смоленская область", "Калужская область", "Тульская область", "Рязанская область", "Владимирская область", "Ярославская область"],
+        "Москва": ["Московская область"],
+        "Смоленская область": ["Брянская область", "Калужская область", "Тверская область", "Псковская область"],
+        "Калужская область": ["Брянская область", "Орловская область", "Тульская область", "Московская область", "Смоленская область"],
+        "Тульская область": ["Калужская область", "Орловская область", "Липецкая область", "Рязанская область", "Московская область"],
+        "Рязанская область": ["Тульская область", "Липецкая область", "Тамбовская область", "Владимирская область", "Московская область"],
+        "Тамбовская область": ["Липецкая область", "Воронежская область", "Саратовская область", "Пензенская область", "Рязанская область"]
+    };
+    
+    // Добавляем обратные связи для полноты (если A сосед B, то B сосед A)
+    for (let [reg, neigh] of Object.entries(neighbors)) {
+        for (let n of neigh) {
+            if (!neighbors[n]) neighbors[n] = [];
+            if (!neighbors[n].includes(reg)) neighbors[n].push(reg);
+        }
+    }
     
     const geoNameMapping = {
-        "Чувашская Республика": "Чувашская Республика", "Республика Татарстан": "Татарстан",
-        "Республика Башкортостан": "Башкортостан", "Удмуртская Республика": "Удмуртская Республика",
-        "Республика Мордовия": "Республика Мордовия", "Республика Марий Эл": "Марий Эл",
-        "Чеченская Республика": "Чечня", "Республика Дагестан": "Дагестан",
-        "Республика Адыгея": "Адыгея", "Республика Карелия": "Республика Карелия",
-        "Республика Коми": "Республика Коми", "Ямало-Ненецкий АО": "ЯНАО",
-        "Ханты-Мансийский АО": "ХМАО", "г. Москва": "Москва", "Москва": "Москва",
-        "Санкт-Петербург": "Санкт-Петербург", "Республика Крым": "Крым"
+        "Чувашская Республика":"Чувашская Республика","Республика Татарстан":"Татарстан",
+        "Республика Башкортостан":"Башкортостан","Удмуртская Республика":"Удмуртская Республика",
+        "Республика Мордовия":"Республика Мордовия","Республика Марий Эл":"Марий Эл",
+        "Чеченская Республика":"Чечня","Республика Дагестан":"Дагестан",
+        "Республика Адыгея":"Адыгея","Республика Карелия":"Республика Карелия",
+        "Республика Коми":"Республика Коми","Ямало-Ненецкий АО":"ЯНАО",
+        "Ханты-Мансийский АО":"ХМАО","г. Москва":"Москва","Москва":"Москва",
+        "Санкт-Петербург":"Санкт-Петербург","Республика Крым":"Крым"
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
+    
+    // Прогноз угроз (соседи активных тревог)
+    function updateForecast() {
+        const activeRegions = [];
+        for (const [region, st] of Object.entries(regionStatus)) {
+            if (ignoredRegions.includes(region)) continue;
+            if (st.rocket || st.droneAlert || st.droneDanger) activeRegions.push(region);
+        }
+        const forecastSet = new Set();
+        for (const reg of activeRegions) {
+            const neighs = neighbors[reg] || [];
+            for (const n of neighs) {
+                const status = regionStatus[n];
+                if (!status || (!status.rocket && !status.droneAlert && !status.droneDanger)) {
+                    if (!ignoredRegions.includes(n)) forecastSet.add(n);
+                }
+            }
+        }
+        const forecastList = Array.from(forecastSet).sort();
+        const forecastDiv = document.getElementById('forecastList');
+        if (forecastList.length === 0) {
+            forecastDiv.innerHTML = '<div class="forecast-empty">📭 Нет прогнозируемых угроз</div>';
+        } else {
+            forecastDiv.innerHTML = forecastList.map(r => `<div class="forecast-item">⚠️ ${r}</div>`).join('');
+        }
+    }
+    
+    // ---------- СКРИНШОТ ----------
+    async function takeScreenshot() {
+        const mapDiv = document.getElementById('map');
+        const toast = document.getElementById('copy-toast');
+        try {
+            showToast("📸 Создание скриншота...");
+            const canvas = await html2canvas(mapDiv, {
+                scale: 2,
+                backgroundColor: null,
+                useCORS: true,
+                logging: false
+            });
+            const link = document.createElement('a');
+            const date = new Date();
+            const filename = `airalert_${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}.png`;
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+            showToast("✅ Скриншот сохранён!");
+        } catch (err) {
+            console.error(err);
+            showToast("❌ Ошибка создания скриншота");
+        }
+    }
     
     // ---------- ЗАГРУЗКА ALERTS.JSON ----------
     async function fetchAlerts() {
@@ -320,6 +413,7 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
+                updateForecast();
             } else throw new Error("Неверный формат alerts.json");
         } catch (err) { console.error(err); }
     }
@@ -343,7 +437,7 @@
         else if(eff.droneAlert) { text="🔴 ТРЕВОГА БПЛА! Фиксация / Работа ПВО"; color="#ff8888"; }
         else if(eff.droneDanger) { text="🟡 Опасность БПЛА в регионе"; color="#ffc107"; }
         else { text="⚪ Отбой / Спокойно"; color="#adb5bd"; }
-        return `<div style="font-family:'Segoe UI';min-width:160px;"><b>${regionName}</b><br><span style="color:${color}">${text}</span></div>`;
+        return `<div style="min-width:160px;"><b>${regionName}</b><br><span style="color:${color}">${text}</span></div>`;
     }
     function updateMapAndPanel() {
         if(!polygonsLayer) return;
@@ -354,6 +448,7 @@
             layer.getPopup()?.setContent(getPopupContent(norm, eff));
         });
         updateAlertsPanel();
+        updateForecast();
     }
     function updateAlertsPanel() {
         const panelDiv = document.getElementById('panelContent');
@@ -361,7 +456,7 @@
         for (const [region, st] of Object.entries(regionStatus)) {
             if(ignoredRegions.includes(region)) continue;
             if(st.rocket) active.push({ name: region, type:'rocket', label:'🟤 Ракетная опасность', priority:1 });
-            else if(st.droneAlert) active.push({ name: region, type:'droneAlert', label:'🔴 Тревога БПЛА (фиксация/ПВО)', priority:2 });
+            else if(st.droneAlert) active.push({ name: region, type:'droneAlert', label:'🔴 Тревога БПЛА (ПВО)', priority:2 });
             else if(st.droneDanger) active.push({ name: region, type:'droneDanger', label:'🟡 Опасность БПЛА', priority:3 });
         }
         if(active.length===0) { panelDiv.innerHTML = '<div class="empty-message">✨ Нет активных тревог</div>'; return; }
@@ -379,13 +474,13 @@
         for(const [region, st] of Object.entries(regionStatus)) {
             if(ignoredRegions.includes(region)) continue;
             if(st.rocket) active.push({name:region, label:'🟤 Ракетная опасность'});
-            else if(st.droneAlert) active.push({name:region, label:'🔴 Тревога БПЛА (фиксация/работа ПВО)'});
+            else if(st.droneAlert) active.push({name:region, label:'🔴 Тревога БПЛА (ПВО)'});
             else if(st.droneDanger) active.push({name:region, label:'🟡 Опасность БПЛА'});
         }
-        if(active.length===0) { showToast("✨ Нет активных тревог"); return; }
+        if(active.length===0) { showToast("Нет активных тревог"); return; }
         const text = `📅 Активные тревоги на ${getCurrentDateTimeString()}\n${active.map(a=>`${a.label}: ${a.name}`).join('\n')}`;
-        try { await navigator.clipboard.writeText(text); showToast(`📋 Скопировано ${active.length} тревог`); }
-        catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(`📋 Скопировано ${active.length} тревог`); }
+        try { await navigator.clipboard.writeText(text); showToast(`Скопировано ${active.length} тревог`); }
+        catch { const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(`Скопировано ${active.length} тревог`); }
     }
     function showToast(msg) {
         const old = document.querySelector('.copy-toast');
@@ -488,7 +583,7 @@
         updateMapAndPanel();
     }
     
-    // ---------- НАСТРОЙКИ ----------
+    // ---------- НАСТРОЙКИ И УСТРОЙСТВО ----------
     let isLightTheme = false;
     let rulerEnabled = true;
     let deviceSelectorEnabled = true;
@@ -586,7 +681,7 @@
                     <button data-device="tablet" style="padding: 12px;">📟 Планшет</button>
                     <button data-device="computer" style="padding: 12px;">💻 Компьютер</button>
                 </div>
-                <div style="margin-top: 16px; font-size: 0.7rem; opacity: 0.7; text-align: center;">Это можно изменить позже в настройках (⚙️)</div>
+                <div style="margin-top: 16px; font-size: 0.7rem; text-align: center;">Можно изменить в настройках (⚙️)</div>
             </div>
         `;
         document.body.appendChild(modal);
@@ -598,9 +693,9 @@
     function updateClock() {
         const now = new Date();
         document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', { hour:'2-digit', minute:'2-digit' });
-        document.getElementById('liveDate').innerHTML = now.toLocaleDateString('ru', { day:'numeric', month:'long', weekday:'long' });
+        document.getElementById('liveDate').innerHTML = now.toLocaleDateString('ru', { day:'numeric', month:'long', weekday:'short' });
     }
-    updateClock(); setInterval(updateClock, 60000);
+    updateClock(); setInterval(updateClock, 1000);
     
     // ---------- ЗАПУСК ----------
     loadPolygons();
@@ -611,6 +706,8 @@
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
+    document.getElementById('screenshotBtn').addEventListener('click', takeScreenshot);
+    
     const panel = document.getElementById('alertsPanel');
     document.getElementById('openPanelBtn').addEventListener('click', () => { panel.classList.add('open'); updateAlertsPanel(); });
     document.getElementById('closePanelBtn').addEventListener('click', () => panel.classList.remove('open'));
