@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Air Alert Map — Тревоги РФ с уведомлениями</title>
+    <title>Air Alert Map — Тревоги РФ</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -20,8 +20,7 @@
         body.light-theme .ruler-panel,
         body.light-theme .alerts-panel,
         body.light-theme .toolbar,
-        body.light-theme .settings-modal,
-        body.light-theme .notify-modal {
+        body.light-theme .settings-modal {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             border-color: rgba(0, 0, 0, 0.2);
@@ -156,47 +155,6 @@
         .alert-type.droneDanger { background: #ffc10720; color: #ffc107; border: 1px solid #ffc107; }
         .empty-message { color: #aaa; text-align: center; padding: 30px 20px; font-style: italic; }
 
-        /* Модальное окно уведомлений с поиском */
-        .notify-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-            z-index: 10001; display: flex; align-items: center; justify-content: center;
-            font-family: monospace;
-        }
-        .notify-modal-content {
-            background: #1e243b; border-radius: 32px; padding: 24px;
-            width: 350px; max-height: 85vh; overflow-y: auto;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.5); border: 1px solid #ffc10760;
-        }
-        .notify-modal-content h3 { color: #ffc107; margin-bottom: 16px; text-align: center; }
-        .search-box {
-            width: 100%; padding: 8px 12px; margin-bottom: 16px;
-            border-radius: 40px; border: 1px solid #555;
-            background: #2a2f44; color: white; font-size: 0.9rem;
-        }
-        .region-list {
-            display: flex; flex-direction: column; gap: 8px;
-            max-height: 300px; overflow-y: auto; margin-bottom: 20px;
-        }
-        .region-check {
-            display: flex; align-items: center; gap: 10px;
-            color: white; padding: 6px; border-radius: 8px;
-            background: rgba(255,255,255,0.1);
-        }
-        .region-check input { width: 18px; height: 18px; cursor: pointer; }
-        .region-check label { flex: 1; cursor: pointer; font-size: 0.9rem; }
-        .notify-actions {
-            display: flex; gap: 12px; justify-content: space-between;
-        }
-        .notify-actions button {
-            flex: 1; padding: 10px; border-radius: 40px;
-            border: none; font-weight: bold; cursor: pointer; transition: 0.2s;
-        }
-        .btn-save { background: #28a745; color: white; }
-        .btn-save:hover { background: #1e7e34; }
-        .btn-cancel { background: #dc3545; color: white; }
-        .btn-cancel:hover { background: #b02a37; }
-
         .copy-toast {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
             background: #28a745; color: white; padding: 6px 16px;
@@ -259,7 +217,6 @@
 <button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
 <div class="toolbar" id="toolbar">
-    <button id="notifyBtn" class="tool-btn">🔔 Уведомления</button>
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
 </div>
@@ -346,129 +303,6 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
     
-    // ---------- УВЕДОМЛЕНИЯ ----------
-    let notificationPermission = false;
-    let selectedRegions = [];
-    let lastStatusSnapshot = {};
-    let isFirstLoad = true;
-    
-    function loadSelectedRegions() {
-        const saved = localStorage.getItem('notifyRegions');
-        if(saved) try { selectedRegions = JSON.parse(saved); console.log("Загружены выбранные регионы:", selectedRegions); } catch(e) { selectedRegions = []; }
-    }
-    function saveSelectedRegions() { localStorage.setItem('notifyRegions', JSON.stringify(selectedRegions)); console.log("Сохранены регионы:", selectedRegions); }
-    
-    async function requestNotificationPermission() {
-        if (!("Notification" in window)) { alert("Ваш браузер не поддерживает уведомления"); return false; }
-        if (Notification.permission === "granted") { notificationPermission = true; return true; }
-        if (Notification.permission !== "denied") {
-            const permission = await Notification.requestPermission();
-            notificationPermission = (permission === "granted");
-            return notificationPermission;
-        }
-        return false;
-    }
-    
-    function showNotification(title, body) {
-        if (!notificationPermission) return;
-        try { 
-            new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
-            console.log("Уведомление отправлено:", title);
-        } catch(e) { console.warn(e); }
-    }
-    
-    function checkAndNotify() {
-        if (!notificationPermission || selectedRegions.length === 0) {
-            console.log("Уведомления не активны: permission=", notificationPermission, "selectedRegions.length=", selectedRegions.length);
-            return;
-        }
-        for (const region of selectedRegions) {
-            const current = regionStatus[region];
-            const previous = lastStatusSnapshot[region];
-            if (!current) continue;
-            const getLevel = (st) => {
-                if (st && st.rocket) return 4;
-                if (st && st.droneAlert) return 3;
-                if (st && st.droneDanger) return 2;
-                return 1;
-            };
-            const currentLevel = getLevel(current);
-            const previousLevel = getLevel(previous);
-            console.log(`Регион ${region}: текущий уровень=${currentLevel}, предыдущий=${previousLevel}`);
-            if (currentLevel > previousLevel) {
-                let title = `⚠️ Тревога в регионе ${region}`;
-                let body = "";
-                if (current.rocket) body = "🟤 РАКЕТНАЯ ОПАСНОСТЬ! Немедленно укройтесь!";
-                else if (current.droneAlert) body = "🔴 Тревога БПЛА! Работа ПВО, соблюдайте осторожность.";
-                else if (current.droneDanger) body = "🟡 Опасность БПЛА в регионе.";
-                showNotification(title, body);
-            }
-        }
-        // Сохраняем текущий снимок для следующего сравнения
-        lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
-    }
-    
-    // Модальное окно с поиском и чекбоксами
-    function showRegionSelector() {
-        const modal = document.createElement('div');
-        modal.className = 'notify-modal';
-        const regionsList = allRegionNames.filter(r => !ignoredRegions.includes(r));
-        
-        function renderList(filterText = "") {
-            const filtered = regionsList.filter(r => r.toLowerCase().includes(filterText.toLowerCase()));
-            return filtered.map(r => {
-                const safeId = "chk_" + r.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
-                return `
-                    <div class="region-check">
-                        <input type="checkbox" value="${r}" id="${safeId}" ${selectedRegions.includes(r) ? 'checked' : ''}>
-                        <label for="${safeId}">${r}</label>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        modal.innerHTML = `
-            <div class="notify-modal-content">
-                <h3>🔔 Выберите регионы для уведомлений</h3>
-                <input type="text" id="regionSearch" class="search-box" placeholder="🔍 Поиск региона...">
-                <div class="region-list" id="regionList">${renderList()}</div>
-                <div class="notify-actions">
-                    <button class="btn-save" id="notifySaveBtn">Сохранить</button>
-                    <button class="btn-cancel" id="notifyCancelBtn">Отмена</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        const searchInput = modal.querySelector('#regionSearch');
-        const regionListDiv = modal.querySelector('#regionList');
-        
-        const updateList = () => {
-            regionListDiv.innerHTML = renderList(searchInput.value);
-        };
-        searchInput.addEventListener('input', updateList);
-        
-        const saveBtn = modal.querySelector('#notifySaveBtn');
-        const cancelBtn = modal.querySelector('#notifyCancelBtn');
-        
-        saveBtn.addEventListener('click', () => {
-            const newSelected = [];
-            // Собираем все чекбоксы из всего документа модального окна (даже скрытые поиском)
-            const allChecks = modal.querySelectorAll('.region-check input[type="checkbox"]');
-            allChecks.forEach(chk => {
-                if (chk.checked) {
-                    newSelected.push(chk.value);
-                }
-            });
-            selectedRegions = newSelected;
-            saveSelectedRegions();
-            modal.remove();
-            showToast(`Выбрано ${selectedRegions.length} регионов для уведомлений`);
-            console.log("Сохранено:", selectedRegions);
-        });
-        cancelBtn.addEventListener('click', () => modal.remove());
-    }
-    
     // ---------- ЗАГРУЗКА ALERTS.JSON ----------
     async function fetchAlerts() {
         try {
@@ -476,7 +310,6 @@
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
             if (data && data.regions) {
-                // Обновляем статусы
                 for (const [region, st] of Object.entries(data.regions)) {
                     if (ignoredRegions.includes(region)) continue;
                     regionStatus[region] = { rocket: !!st.rocket, droneAlert: !!st.droneAlert, droneDanger: !!st.droneDanger };
@@ -487,15 +320,6 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
-                
-                // При первой загрузке инициализируем снимок статусов, чтобы уведомления не приходили на уже существующие тревоги
-                if (isFirstLoad) {
-                    lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
-                    isFirstLoad = false;
-                    console.log("Первый снимок статусов создан");
-                } else {
-                    checkAndNotify();
-                }
             } else throw new Error("Неверный формат alerts.json");
         } catch (err) { console.error(err); }
     }
@@ -781,18 +605,12 @@
     // ---------- ЗАПУСК ----------
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
-    loadSelectedRegions();
     
     // ---------- ОБРАБОТЧИКИ ----------
     document.getElementById('settingsGear').addEventListener('click', () => showSettingsModal());
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
-    document.getElementById('notifyBtn').addEventListener('click', async () => {
-        const granted = await requestNotificationPermission();
-        if (granted) showRegionSelector();
-        else alert("Разрешите уведомления в настройках браузера.");
-    });
     const panel = document.getElementById('alertsPanel');
     document.getElementById('openPanelBtn').addEventListener('click', () => { panel.classList.add('open'); updateAlertsPanel(); });
     document.getElementById('closePanelBtn').addEventListener('click', () => panel.classList.remove('open'));
