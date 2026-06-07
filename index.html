@@ -14,7 +14,7 @@
             overflow: hidden;
             transition: background 0.3s ease;
         }
-        /* Светлая тема */
+        /* ========== СВЕТЛАЯ ТЕМА ========== */
         body.light-theme { background: #eef2f5; }
         body.light-theme .clock,
         body.light-theme .legend,
@@ -35,13 +35,20 @@
         body.light-theme .region-name { color: #111; }
         body.light-theme .legend { color: #1a1e2c; }
         body.light-theme .forecast-panel { color: #111; }
-        body.light-theme .forecast-item { background: rgba(0, 0, 0, 0.05); }
+        body.light-theme .forecast-item { background: rgba(0, 0, 0, 0.05); border-bottom-color: rgba(0,0,0,0.1); color: #111; }
+        body.light-theme .forecast-empty { color: #555; }
+        body.light-theme .ruler-panel, body.light-theme .forecast-panel { color: #111; }
+        body.light-theme .ruler-panel h4, body.light-theme .forecast-panel h4 { color: #b13b00; }
+        body.light-theme .time-result { color: #b13b00; }
+        body.light-theme .distance-info { background: rgba(0,0,0,0.05); color: #111; }
         
+        /* ========== ОСНОВНЫЕ СТИЛИ ========== */
         .clock {
             position: fixed; top: 20px; right: 80px; z-index: 2000;
             background: rgba(10,14,26,0.85); backdrop-filter: blur(8px);
             border-radius: 20px; padding: 8px 18px;
             font-family: monospace; text-align: center; border: 1px solid rgba(255,255,255,0.15);
+            color: #e8eef2;
         }
         .time-main { font-size: 1.8rem; font-weight: 600; background: linear-gradient(135deg, #fff, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .date { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; }
@@ -62,6 +69,7 @@
             border-radius: 12px; padding: 10px 16px; font-size: 0.75rem;
             border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px;
             pointer-events: none;
+            color: #e8eef2;
         }
         .legend-item { display: flex; align-items: center; gap: 8px; }
         .legend-color { width: 24px; height: 16px; border-radius: 4px; }
@@ -106,6 +114,7 @@
             border-radius: 16px; padding: 12px 18px; width: 260px;
             border: 1px solid rgba(255,255,255,0.2); display: none;
             flex-direction: column; gap: 10px;
+            color: #e8eef2;
         }
         .ruler-panel.show { display: flex; }
         .ruler-panel h4 { margin: 0 0 5px 0; color: #ffc107; }
@@ -113,15 +122,17 @@
         .distance-info { background: #00000055; padding: 8px; border-radius: 8px; margin-top: 5px; }
         .time-result { font-size: 1.1rem; font-weight: bold; color: #ffc107; text-align: center; }
 
-        /* Панель прогноза */
+        /* Панель прогноза (скрыта по умолчанию) */
         .forecast-panel {
             position: fixed; top: 80px; right: 20px; z-index: 2100;
             background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
             border-radius: 16px; padding: 12px 18px;
             width: 260px; border: 1px solid rgba(255,215,0,0.5);
-            display: flex; flex-direction: column; gap: 10px;
-            pointer-events: none;
+            display: none;  /* скрыта по умолчанию */
+            flex-direction: column; gap: 10px;
+            color: #e8eef2;
         }
+        .forecast-panel.show { display: flex; }
         .forecast-panel h4 { margin: 0; color: #ffc107; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
         .forecast-list { max-height: 200px; overflow-y: auto; font-size: 0.8rem; }
         .forecast-item { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -200,6 +211,7 @@
             color: white; font-weight: bold; cursor: pointer;
         }
 
+        /* Адаптация под телефон */
         body.device-phone .toolbar { top: 70px; padding: 5px 10px; gap: 6px; }
         body.device-phone .tool-btn { padding: 4px 10px; font-size: 0.7rem; }
         body.device-phone .clock { top: 12px; right: 70px; padding: 4px 12px; }
@@ -225,6 +237,7 @@
     <button id="screenshotBtn" class="tool-btn">📸 Скриншот</button>
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
+    <button id="forecastToggleBtn" class="tool-btn">🔮 Прогноз</button>
 </div>
 
 <div class="legend">
@@ -236,7 +249,7 @@
 
 <div class="update-info" id="lastUpdateInfo">📅 Последнее обновление: --:--</div>
 
-<!-- Панель прогноза -->
+<!-- Панель прогноза (изначально скрыта) -->
 <div id="forecastPanel" class="forecast-panel">
     <h4>🔮 Прогноз угроз</h4>
     <div id="forecastList" class="forecast-list">Загрузка...</div>
@@ -300,19 +313,19 @@
     ];
     const ignoredRegions = ["Астраханская область","Архангельская область","Омская область"];
     
-    // Соседние регионы для прогноза (упрощённый набор для европейской части)
+    // Соседние регионы для прогноза (упрощённый набор)
     const neighbors = {
-        "Белгородская область": ["Курская область", "Воронежская область", "Харьковская область"],
+        "Белгородская область": ["Курская область", "Воронежская область"],
         "Курская область": ["Белгородская область", "Орловская область", "Липецкая область", "Воронежская область"],
         "Брянская область": ["Смоленская область", "Калужская область", "Орловская область", "Курская область"],
         "Воронежская область": ["Белгородская область", "Курская область", "Липецкая область", "Тамбовская область", "Волгоградская область", "Ростовская область"],
         "Липецкая область": ["Курская область", "Орловская область", "Тульская область", "Рязанская область", "Тамбовская область", "Воронежская область"],
         "Орловская область": ["Брянская область", "Калужская область", "Тульская область", "Липецкая область", "Курская область"],
-        "Ростовская область": ["Воронежская область", "Волгоградская область", "Краснодарский край", "ДНР", "ЛНР"],
-        "Волгоградская область": ["Воронежская область", "Ростовская область", "Калмыкия", "Астраханская область"],
+        "Ростовская область": ["Воронежская область", "Волгоградская область", "Краснодарский край"],
+        "Волгоградская область": ["Воронежская область", "Ростовская область"],
         "Краснодарский край": ["Ростовская область", "Крым", "Ставропольский край"],
-        "Крым": ["Краснодарский край", "Херсонская область"],
-        "Ленинградская область": ["Санкт-Петербург", "Новгородская область", "Псковская область", "Карелия"],
+        "Крым": ["Краснодарский край"],
+        "Ленинградская область": ["Санкт-Петербург", "Новгородская область", "Псковская область"],
         "Псковская область": ["Ленинградская область", "Новгородская область", "Тверская область", "Смоленская область"],
         "Новгородская область": ["Ленинградская область", "Псковская область", "Тверская область"],
         "Тверская область": ["Новгородская область", "Псковская область", "Смоленская область", "Московская область", "Ярославская область"],
@@ -324,8 +337,7 @@
         "Рязанская область": ["Тульская область", "Липецкая область", "Тамбовская область", "Владимирская область", "Московская область"],
         "Тамбовская область": ["Липецкая область", "Воронежская область", "Саратовская область", "Пензенская область", "Рязанская область"]
     };
-    
-    // Добавляем обратные связи для полноты (если A сосед B, то B сосед A)
+    // Добавляем обратные связи
     for (let [reg, neigh] of Object.entries(neighbors)) {
         for (let n of neigh) {
             if (!neighbors[n]) neighbors[n] = [];
@@ -345,7 +357,7 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
     
-    // Прогноз угроз (соседи активных тревог)
+    // Прогноз угроз
     function updateForecast() {
         const activeRegions = [];
         for (const [region, st] of Object.entries(regionStatus)) {
@@ -374,15 +386,9 @@
     // ---------- СКРИНШОТ ----------
     async function takeScreenshot() {
         const mapDiv = document.getElementById('map');
-        const toast = document.getElementById('copy-toast');
         try {
             showToast("📸 Создание скриншота...");
-            const canvas = await html2canvas(mapDiv, {
-                scale: 2,
-                backgroundColor: null,
-                useCORS: true,
-                logging: false
-            });
+            const canvas = await html2canvas(mapDiv, { scale: 2, backgroundColor: null, useCORS: true, logging: false });
             const link = document.createElement('a');
             const date = new Date();
             const filename = `airalert_${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}_${date.getHours()}-${date.getMinutes()}.png`;
@@ -587,10 +593,13 @@
     let isLightTheme = false;
     let rulerEnabled = true;
     let deviceSelectorEnabled = true;
+    let forecastEnabled = true;  // показывать ли прогноз (настройка)
     
     function applySettings() {
+        // Тема
         if(isLightTheme) { document.body.classList.add('light-theme'); switchTileTheme(true); }
         else { document.body.classList.remove('light-theme'); switchTileTheme(false); }
+        // Линейка
         const toolbar = document.getElementById('toolbar');
         const rulerPanel = document.getElementById('rulerPanel');
         if(rulerEnabled) {
@@ -601,6 +610,7 @@
             rulerPanel.classList.remove('show');
             if(rulerModeActive) setRulerMode(false);
         }
+        // Кнопка смены устройства
         let deviceBtn = document.getElementById('deviceSwitchBtn');
         if(deviceSelectorEnabled) {
             if(!deviceBtn) {
@@ -614,6 +624,13 @@
             }
         } else {
             if(deviceBtn) deviceBtn.remove();
+        }
+        // Прогноз: показывать/скрывать
+        const forecastPanel = document.getElementById('forecastPanel');
+        if(forecastEnabled) {
+            forecastPanel.classList.add('show');
+        } else {
+            forecastPanel.classList.remove('show');
         }
     }
     
@@ -634,6 +651,7 @@
                 <div class="setting-item"><label>📏 Линейка</label><input type="checkbox" id="settingRuler" ${rulerEnabled ? 'checked' : ''}></div>
                 <div class="setting-item"><label>🌙 Тёмная тема</label><input type="checkbox" id="settingTheme" ${isLightTheme ? '' : 'checked'}></div>
                 <div class="setting-item"><label>📱 Кнопка смены устройства</label><input type="checkbox" id="settingDeviceBtn" ${deviceSelectorEnabled ? 'checked' : ''}></div>
+                <div class="setting-item"><label>🔮 Прогноз угроз</label><input type="checkbox" id="settingForecast" ${forecastEnabled ? 'checked' : ''}></div>
                 <div class="device-selector"><p>Размер интерфейса:</p><div class="device-buttons"><button data-device="phone">📱 Телефон</button><button data-device="tablet">📟 Планшет</button><button data-device="computer">💻 Компьютер</button></div></div>
                 <button class="close-settings" id="closeSettingsBtn">Закрыть</button>
             </div>
@@ -642,11 +660,13 @@
         const chkRuler = modal.querySelector('#settingRuler');
         const chkTheme = modal.querySelector('#settingTheme');
         const chkDeviceBtn = modal.querySelector('#settingDeviceBtn');
+        const chkForecast = modal.querySelector('#settingForecast');
         const deviceBtns = modal.querySelectorAll('[data-device]');
         const closeBtn = modal.querySelector('#closeSettingsBtn');
         chkRuler.addEventListener('change', (e) => { rulerEnabled = e.target.checked; applySettings(); saveSettings(); });
         chkTheme.addEventListener('change', (e) => { isLightTheme = !e.target.checked; applySettings(); saveSettings(); });
         chkDeviceBtn.addEventListener('change', (e) => { deviceSelectorEnabled = e.target.checked; applySettings(); saveSettings(); });
+        chkForecast.addEventListener('change', (e) => { forecastEnabled = e.target.checked; applySettings(); saveSettings(); });
         deviceBtns.forEach(btn => { btn.addEventListener('click', () => { setDeviceType(btn.getAttribute('data-device')); modal.remove(); }); });
         closeBtn.addEventListener('click', () => modal.remove());
     }
@@ -655,6 +675,7 @@
         localStorage.setItem('rulerEnabled', rulerEnabled);
         localStorage.setItem('isLightTheme', isLightTheme);
         localStorage.setItem('deviceSelectorEnabled', deviceSelectorEnabled);
+        localStorage.setItem('forecastEnabled', forecastEnabled);
     }
     
     function loadSettings() {
@@ -664,6 +685,8 @@
         if(savedTheme !== null) isLightTheme = savedTheme === 'true';
         const savedDeviceBtn = localStorage.getItem('deviceSelectorEnabled');
         if(savedDeviceBtn !== null) deviceSelectorEnabled = savedDeviceBtn === 'true';
+        const savedForecast = localStorage.getItem('forecastEnabled');
+        if(savedForecast !== null) forecastEnabled = savedForecast === 'true';
         const savedDevice = localStorage.getItem('userDevice');
         if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) setDeviceType(savedDevice);
         else showFirstDeviceModal();
@@ -707,6 +730,18 @@
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
     document.getElementById('screenshotBtn').addEventListener('click', takeScreenshot);
+    
+    // Кнопка переключения прогноза (показывает/скрывает панель, но не меняет настройку)
+    const forecastToggleBtn = document.getElementById('forecastToggleBtn');
+    forecastToggleBtn.addEventListener('click', () => {
+        const panel = document.getElementById('forecastPanel');
+        if (panel.classList.contains('show')) {
+            panel.classList.remove('show');
+            // при желании можно синхронизировать с forecastEnabled, но не сохраняем
+        } else {
+            panel.classList.add('show');
+        }
+    });
     
     const panel = document.getElementById('alertsPanel');
     document.getElementById('openPanelBtn').addEventListener('click', () => { panel.classList.add('open'); updateAlertsPanel(); });
