@@ -1,399 +1,205 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Air Alert Map — Мониторинг угроз РФ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Air Alert Map — Тревоги РФ (со статистикой и темой)</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #03050b;
-            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-        body.light-theme {
-            background: #eef2f5;
-        }
-        body.light-theme .toolbar,
+        body { background: #0a0e1a; font-family: 'Segoe UI', sans-serif; overflow: hidden; transition: background 0.3s ease; }
+        /* Светлая тема (добавляется классом) */
+        body.light-theme { background: #eef2f5; }
+        body.light-theme .clock,
         body.light-theme .legend,
         body.light-theme .update-info,
         body.light-theme .ruler-panel,
-        body.light-theme .alerts-panel {
-            background: rgba(255, 255, 255, 0.85);
+        body.light-theme .alerts-panel,
+        body.light-theme .toolbar,
+        body.light-theme .status {
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(12px);
-            border-color: rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 0, 0, 0.2);
             color: #1a1e2c;
         }
-        body.light-theme .time-main,
-        body.light-theme .region-name,
-        body.light-theme .time-result {
-            color: #0a0e1a;
+        body.light-theme .time-main { background: linear-gradient(135deg, #333, #666); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body.light-theme .tool-btn { background: rgba(0, 0, 0, 0.1); color: #111; }
+        body.light-theme .alert-region-item { background: rgba(0, 0, 0, 0.05); }
+        
+        .clock { position: fixed; top: 20px; right: 20px; z-index: 2000; background: rgba(10,14,26,0.85); backdrop-filter: blur(8px); border-radius: 20px; padding: 8px 18px; color: #e8eef2; font-family: monospace; text-align: center; border: 1px solid rgba(255,255,255,0.15); }
+        .time-main { font-size: 1.8rem; font-weight: 600; line-height: 1; background: linear-gradient(135deg, #fff, #ffd966); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .date { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; }
+        .legend { position: fixed; bottom: 20px; left: 20px; z-index: 2000; background: rgba(10,14,26,0.85); backdrop-filter: blur(8px); border-radius: 12px; padding: 10px 16px; color: #e8eef2; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px; pointer-events: none; }
+        .legend-item { display: flex; align-items: center; gap: 8px; }
+        .legend-color { width: 24px; height: 16px; border-radius: 4px; }
+        
+        .update-info { position: fixed; bottom: 20px; right: 20px; z-index: 2000; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); border-radius: 40px; padding: 8px 20px; color: #ccc; font-size: 0.85rem; font-family: monospace; text-align: center; pointer-events: none; }
+        
+        /* Строка статуса — теперь показывает статистику */
+        .status { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 2000; 
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); border-radius: 40px; 
+            padding: 8px 24px; color: #ffd966; font-size: 0.85rem; font-weight: bold;
+            font-family: monospace; white-space: nowrap; text-align: center;
+            border: 1px solid rgba(255,215,0,0.5); pointer-events: none;
         }
-        body.light-theme .tool-btn {
-            background: rgba(0, 0, 0, 0.1);
-            color: #111;
-        }
-        body.light-theme .alert-region-item {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        .clock {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 2000;
-            background: rgba(10, 14, 26, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 8px 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .time-main {
-            font-size: 1.9rem;
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #fff, #ffd966);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .date {
-            font-size: 0.65rem;
-            opacity: 0.85;
-            margin-top: 4px;
-            text-transform: uppercase;
-        }
-        .legend {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 2000;
-            background: rgba(10, 14, 26, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 24px;
-            padding: 12px 18px;
-            color: #eef2ff;
-            font-size: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .legend-color {
-            width: 28px;
-            height: 18px;
-            border-radius: 20px;
-        }
-        .update-info {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 2000;
-            background: rgba(0,0,0,0.65);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 6px 18px;
-            color: #ccc;
-            font-size: 0.75rem;
-            font-family: monospace;
-            pointer-events: none;
-        }
-        .status {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 8px 24px;
-            color: #ffd966;
-            font-size: 0.85rem;
-            font-weight: bold;
-            font-family: monospace;
-            white-space: nowrap;
-            pointer-events: none;
-            border: 1px solid rgba(255,215,0,0.5);
-            letter-spacing: 0.5px;
-        }
-        .alert-list-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 2000;
-            background: linear-gradient(95deg, #dc3545, #b02a37);
-            backdrop-filter: blur(8px);
-            border: none;
-            border-radius: 60px;
-            padding: 10px 22px;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Segoe UI', monospace;
-            box-shadow: 0 4px 14px rgba(220,53,69,0.4);
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .alert-list-btn:hover { transform: scale(1.02); background: #9c1f2e; }
+        .alert-list-btn { position: fixed; top: 20px; left: 20px; z-index: 2000; background: rgba(220,53,69,0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.3); border-radius: 40px; padding: 8px 18px; color: white; font-size: 0.9rem; font-weight: bold; cursor: pointer; font-family: monospace; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .alert-list-btn:hover { background: #b02a37; transform: scale(1.02); }
+        
         .toolbar {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            display: flex;
-            gap: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(16px);
-            padding: 8px 20px;
-            border-radius: 60px;
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 2000; display: flex; gap: 12px; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 40px;
             border: 1px solid rgba(255,255,255,0.2);
         }
         .tool-btn {
-            background: rgba(30, 35, 55, 0.9);
-            border: none;
-            color: white;
-            padding: 6px 18px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: monospace;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            background: rgba(30,35,50,0.9); border: none; color: white;
+            padding: 6px 16px; border-radius: 30px; font-size: 0.85rem;
+            font-weight: bold; cursor: pointer; transition: 0.2s;
+            font-family: monospace; letter-spacing: 0.5px;
+            display: flex; align-items: center; gap: 6px;
         }
-        .tool-btn.active { background: #2ecc71; box-shadow: 0 0 12px #2ecc71; }
-        .tool-btn:hover { background: #2ecc71; transform: translateY(-2px); }
-        .tool-btn.danger { background: #e67e22; }
-        .tool-btn.danger:hover { background: #d35400; }
+        .tool-btn.active { background: #28a745; box-shadow: 0 0 8px #28a745; }
+        .tool-btn:hover { background: #28a745; transform: scale(1.02); }
+        .tool-btn.danger { background: #dc3545; }
+        .tool-btn.danger:hover { background: #b02a37; }
+        
         .ruler-panel {
-            position: fixed;
-            top: 90px;
-            left: 20px;
-            z-index: 2100;
-            background: rgba(8, 12, 24, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 16px 20px;
-            width: 280px;
-            border: 1px solid rgba(255, 193, 7, 0.5);
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            font-family: monospace;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-            color: white;
+            position: fixed; top: 80px; left: 20px; z-index: 2100;
+            background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
+            border-radius: 16px; padding: 12px 18px; width: 260px;
+            border: 1px solid rgba(255,255,255,0.2); display: none;
+            flex-direction: column; gap: 10px; font-family: monospace;
         }
         .ruler-panel.show { display: flex; }
-        .ruler-panel h4 { margin: 0; color: #ffc107; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
+        .ruler-panel h4 { margin: 0 0 5px 0; color: #ffc107; font-size: 1rem; }
         .threat-select {
-            background: #1e243b;
-            color: white;
-            border: 1px solid #ffc10760;
-            padding: 8px 12px;
-            border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: bold;
+            background: #1a1f2e; color: white; border: 1px solid #555;
+            padding: 6px; border-radius: 8px; font-size: 0.8rem;
         }
-        .distance-info {
-            background: #00000066;
-            padding: 10px;
-            border-radius: 20px;
-            text-align: center;
-            color: #eee;
-        }
-        .time-result {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #ffaa33;
-            text-shadow: 0 0 6px #ffaa3350;
-            margin-top: 6px;
-        }
+        .distance-info { background: #00000055; padding: 8px; border-radius: 8px; margin-top: 5px; }
+        .distance-info p { margin: 4px 0; font-size: 0.75rem; }
+        .time-result { font-size: 1.1rem; font-weight: bold; color: #ffc107; text-align: center; }
+        
         .alerts-panel {
-            position: fixed;
-            top: 0;
-            left: -360px;
-            width: 340px;
-            height: 100%;
-            background: rgba(8, 12, 24, 0.96);
-            backdrop-filter: blur(20px);
-            z-index: 3000;
-            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
+            background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
+            z-index: 3000; transition: left 0.3s ease;
             border-right: 1px solid rgba(255,255,255,0.2);
-            display: flex;
-            flex-direction: column;
-            font-family: 'Segoe UI', monospace;
-            box-shadow: 6px 0 30px rgba(0,0,0,0.6);
+            display: flex; flex-direction: column; font-family: monospace;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.5);
         }
         .alerts-panel.open { left: 0; }
-        .panel-header {
-            padding: 22px 20px;
-            border-bottom: 1px solid rgba(255,215,0,0.3);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.4);
-        }
-        .panel-header h3 { color: #ffc107; font-size: 1.3rem; margin: 0; display: flex; gap: 8px; }
-        .stats-badge {
-            background: rgba(0,0,0,0.6);
-            border-radius: 40px;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            color: #ffd966;
-        }
-        .copy-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.8rem;
-        }
-        .copy-btn:hover { background: #2ecc71; }
-        .close-panel {
-            background: none; border: none; color: white; font-size: 2rem; cursor: pointer;
-            line-height: 1; transition: 0.2s;
-        }
-        .close-panel:hover { color: #ff6b6b; transform: rotate(90deg); }
-        .panel-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 12px;
-        }
-        .alert-region-item {
-            background: rgba(35, 40, 58, 0.8);
-            margin-bottom: 12px;
-            padding: 14px;
-            border-radius: 20px;
-            border-left: 6px solid;
-            transition: 0.1s;
-            backdrop-filter: blur(4px);
-        }
-        .alert-region-item.rocket { border-left-color: #8B0000; background: linear-gradient(95deg, #2a121f, #1f0f1a); }
+        .panel-header { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); }
+        .panel-header h3 { color: #ffc107; font-size: 1.2rem; margin: 0; display: flex; gap: 8px; align-items: center; }
+        .stats-badge { background: rgba(0,0,0,0.6); border-radius: 40px; padding: 4px 12px; font-size: 0.7rem; color: #ffd966; margin-left: 8px; }
+        .panel-actions { display: flex; gap: 12px; align-items: center; }
+        .copy-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 1.1rem; cursor: pointer; padding: 4px 10px; border-radius: 20px; transition: 0.2s; font-family: monospace; }
+        .copy-btn:hover { background: #28a745; }
+        .close-panel { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1; }
+        .close-panel:hover { color: #ff6b6b; }
+        .panel-content { flex: 1; overflow-y: auto; padding: 12px 8px; }
+        .alert-region-item { background: rgba(30,35,50,0.7); margin-bottom: 10px; padding: 12px; border-radius: 12px; border-left: 4px solid; }
+        .alert-region-item.rocket { border-left-color: #8B0000; }
         .alert-region-item.droneAlert { border-left-color: #dc3545; }
         .alert-region-item.droneDanger { border-left-color: #ffc107; }
-        .region-name { font-weight: bold; font-size: 1rem; margin-bottom: 6px; }
-        .alert-type { font-size: 0.75rem; display: inline-block; padding: 4px 12px; border-radius: 60px; font-weight: 600; }
-        .copy-toast {
-            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
-            background: #2ecc71; color: #111; padding: 8px 20px; border-radius: 60px;
-            z-index: 4000; font-weight: bold; animation: fadeOut 2s forwards;
-            pointer-events: none; font-family: monospace;
-        }
+        .region-name { font-weight: bold; font-size: 1rem; margin-bottom: 5px; color: #fff; }
+        .alert-type { font-size: 0.8rem; display: inline-block; padding: 2px 8px; border-radius: 20px; }
+        .alert-type.rocket { background: #8B000030; color: #ffaaaa; border: 1px solid #8B0000; }
+        .alert-type.droneAlert { background: #dc354520; color: #ff8888; border: 1px solid #dc3545; }
+        .alert-type.droneDanger { background: #ffc10720; color: #ffc107; border: 1px solid #ffc107; }
+        .empty-message { color: #aaa; text-align: center; padding: 30px 20px; font-style: italic; }
+        .copy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; z-index: 4000; font-family: monospace; animation: fadeOut 2s forwards; pointer-events: none; }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-        .glow-border {
-            filter: drop-shadow(0 0 5px rgba(139,0,0,0.8));
-            animation: pulseGlow 1.2s infinite;
-        }
-        @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 2px rgba(139,0,0,0.5)); }
-            100% { filter: drop-shadow(0 0 12px rgba(139,0,0,0.9)); }
-        }
-        .custom-popup .leaflet-popup-content-wrapper { background: #151e2c; color: #fff; border-radius: 20px; border-left: 4px solid #ffc107; }
-        .leaflet-control-attribution { display: none; }
-        .leaflet-interactive-off {
-            pointer-events: none !important;
-        }
-        @media (max-width: 650px) {
-            .toolbar { top: 75px; padding: 5px 12px; gap: 6px; }
-            .tool-btn { padding: 4px 12px; font-size: 0.7rem; }
-            .clock { top: 12px; right: 12px; padding: 4px 12px; }
+        .custom-popup .leaflet-popup-content-wrapper { background: #1a1f2e; color: #e8eef2; border-radius: 12px; border-left: 4px solid; }
+        .leaflet-control-attribution { display: none !important; }
+        .leaflet-interactive-off { pointer-events: none !important; }
+        @media (max-width: 600px) {
             .time-main { font-size: 1.2rem; }
+            .clock { padding: 4px 12px; top: 10px; right: 10px; }
+            .legend { bottom: 10px; left: 10px; padding: 8px 12px; font-size: 0.65rem; }
+            .update-info { bottom: 10px; right: 10px; padding: 6px 14px; font-size: 0.7rem; }
+            .alert-list-btn { top: 10px; left: 10px; padding: 5px 14px; font-size: 0.8rem; }
             .alerts-panel { width: 85%; left: -85%; }
-            .ruler-panel { width: 240px; top: 110px; left: 10px; }
-            .legend { bottom: 12px; left: 12px; padding: 8px 12px; }
+            .copy-btn { font-size: 0.9rem; padding: 2px 8px; }
+            .toolbar { top: 70px; padding: 4px 10px; gap: 6px; }
+            .tool-btn { padding: 4px 12px; font-size: 0.7rem; }
+            .ruler-panel { width: 220px; top: 110px; left: 10px; }
             .status { font-size: 0.65rem; padding: 4px 12px; white-space: nowrap; }
         }
     </style>
 </head>
 <body>
-
 <div class="clock"><div class="time-main" id="liveTime">--:--</div><div class="date" id="liveDate">--</div></div>
-<button class="alert-list-btn" id="openPanelBtn"><i class="fas fa-exclamation-triangle"></i> Список тревог</button>
+<button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
 <div class="toolbar">
-    <button id="rulerBtn" class="tool-btn"><i class="fas fa-ruler"></i> Линейка</button>
-    <button id="clearRulerBtn" class="tool-btn danger"><i class="fas fa-trash-alt"></i> Сброс</button>
-    <div id="themeToggleBtn" class="tool-btn" style="padding: 6px 18px;"><i class="fas fa-moon"></i> Тема</div>
+    <button id="rulerBtn" class="tool-btn">📏 Линейка (on/off)</button>
+    <button id="clearRulerBtn" class="tool-btn danger">🗑 Сбросить</button>
+    <button id="themeBtn" class="tool-btn">🌙 Тема</button>
 </div>
 
 <div class="legend">
-    <div class="legend-item"><div class="legend-color" style="background: #6c757d;"></div> <span>⚪ Безопасно</span></div>
+    <div class="legend-item"><div class="legend-color" style="background: #6c757d;"></div> <span>⚪ Отбой / Спокойно</span></div>
     <div class="legend-item"><div class="legend-color" style="background: #ffc107;"></div> <span>🟡 Опасность БПЛА</span></div>
-    <div class="legend-item"><div class="legend-color" style="background: #dc3545;"></div> <span>🔴 Тревога БПЛА (ПВО)</span></div>
-    <div class="legend-item"><div class="legend-color" style="background: #8B0000;"></div> <span>🟤 Ракетная угроза</span></div>
+    <div class="legend-item"><div class="legend-color" style="background: #dc3545;"></div> <span>🔴 Тревога БПЛА (фиксация/ПВО)</span></div>
+    <div class="legend-item"><div class="legend-color" style="background: #8B0000;"></div> <span>🟤 Ракетная опасность</span></div>
 </div>
 
-<div class="update-info" id="lastUpdateInfo"><i class="far fa-clock"></i> Обновление: --:--</div>
-<div class="status" id="status"><i class="fas fa-chart-simple"></i> Загрузка...</div>
+<div class="update-info" id="lastUpdateInfo">📅 Последнее обновление: --:--</div>
+<div class="status" id="status">Загрузка карты...</div>
 
 <div id="rulerPanel" class="ruler-panel">
-    <h4><i class="fas fa-charging-station"></i> Оценка угрозы</h4>
+    <h4>📏 Измерение угрозы</h4>
     <select id="threatType" class="threat-select">
-        <option value="drone">🛩 БПЛА (180 км/ч)</option>
-        <option value="jet_drone">🚀 Реакт. БПЛА (450 км/ч)</option>
+        <option value="drone">🛩 Обычный БПЛА (180 км/ч)</option>
+        <option value="jet_drone">🚀 Реактивный БПЛА (450 км/ч)</option>
         <option value="cruise">✈️ Крылатая ракета (850 км/ч)</option>
-        <option value="ballistic">💥 Баллист. ракета (9000 км/ч)</option>
+        <option value="ballistic">💥 Баллистическая ракета (9000 км/ч)</option>
     </select>
     <div class="distance-info">
-        <p><i class="fas fa-map-marker-alt"></i> Расстояние: <span id="distKm">0</span> км</p>
-        <p><i class="fas fa-hourglass-half"></i> Время подлёта:</p>
+        <p>📏 Расстояние: <span id="distKm">0</span> км</p>
+        <p>⏱ Время подлёта:</p>
         <div id="timeResult" class="time-result">—</div>
     </div>
-    <small style="font-size:0.65rem; opacity:0.7;">★ Два клика по карте → точки A и B</small>
+    <small style="font-size:0.65rem; opacity:0.7;">★ Кликните по карте 2 раза — поставьте точки A и B</small>
 </div>
 
-<div id="map" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0; z-index: 1;"></div>
-
+<div id="map" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;"></div>
 <div id="alertsPanel" class="alerts-panel">
     <div class="panel-header">
-        <h3><i class="fas fa-bell"></i> Активные тревоги</h3>
-        <div style="display: flex; gap: 12px;">
-            <span class="stats-badge" id="panelStats">—</span>
-            <button class="copy-btn" id="copyAlertsBtn"><i class="fas fa-copy"></i> Копировать</button>
-            <button class="close-panel" id="closePanelBtn">&times;</button>
-        </div>
+        <h3>🚨 Регионы с тревогами <span id="panelStats" class="stats-badge">—</span></h3>
+        <div class="panel-actions"><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div>
     </div>
-    <div class="panel-content" id="panelContent"><div class="empty-message">📭 Нет активных тревог</div></div>
+    <div class="panel-content" id="panelContent"><div class="empty-message">Нет активных тревог</div></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
-    // --- КАРТА ---
+    // ---------- 1. КАРТА с возможностью смены темы ----------
     const map = L.map('map').setView([62, 105], 3.8);
-    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2 });
-    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd' });
+    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2
+    });
+    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2
+    });
     let currentTile = darkTile;
     currentTile.addTo(map);
-    function setTileLayer(layer) { map.removeLayer(currentTile); currentTile = layer; currentTile.addTo(map); }
+    
+    function switchTileTheme(isLight) {
+        map.removeLayer(currentTile);
+        currentTile = isLight ? lightTile : darkTile;
+        currentTile.addTo(map);
+    }
 
-    // --- ДАННЫЕ ---
+    // ---------- 2. ГЛОБАЛЬНЫЕ ДАННЫЕ ----------
     let polygonsLayer = null;
     let regionStatus = {};
     let lastUpdateTime = null;
     const colors = { clear: "#6c757d", droneDanger: "#ffc107", droneAlert: "#dc3545", rocket: "#8B0000" };
-
+    
     const allRegionNames = [
         "Москва", "Московская область", "Санкт-Петербург", "Ленинградская область",
         "Белгородская область", "Брянская область", "Владимирская область", "Воронежская область",
@@ -411,8 +217,7 @@
         "Магаданская область", "Камчатский край", "Мурманская область", "Крым", "Дагестан",
         "Республика Карелия", "Республика Коми", "Республика Саха (Якутия)", "ХМАО", "ЯНАО", "Адыгея"
     ];
-    const ignoredRegions = ["Астраханская область", "Архангельская область", "Омская область"];
-
+    
     const geoNameMapping = {
         "Чувашская Республика": "Чувашская Республика", "Республика Татарстан": "Татарстан",
         "Республика Башкортостан": "Башкортостан", "Удмуртская Республика": "Удмуртская Республика",
@@ -424,237 +229,306 @@
         "Санкт-Петербург": "Санкт-Петербург", "Республика Крым": "Крым"
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
-
-    // Подсчёт статистики
+    
+    const ignoredRegions = ["Астраханская область", "Архангельская область", "Омская область"];
+    
+    // Функция подсчёта статистики
     function getStats() {
-        let rocket=0, droneAlert=0, droneDanger=0;
-        for(const st of Object.values(regionStatus)) {
-            if(st.rocket) rocket++;
-            else if(st.droneAlert) droneAlert++;
-            else if(st.droneDanger) droneDanger++;
+        let rocket = 0, droneAlert = 0, droneDanger = 0;
+        for (const st of Object.values(regionStatus)) {
+            if (st.rocket) rocket++;
+            else if (st.droneAlert) droneAlert++;
+            else if (st.droneDanger) droneDanger++;
         }
-        return { rocket, droneAlert, droneDanger };
+        return { rocket, droneAlert, droneDanger, total: rocket + droneAlert + droneDanger };
     }
-
+    
+    function updateStatusBar() {
+        const stats = getStats();
+        const statusDiv = document.getElementById('status');
+        if (statusDiv) {
+            statusDiv.innerHTML = `🟤 Ракет: ${stats.rocket} &nbsp; 🔴 Тревог БПЛА: ${stats.droneAlert} &nbsp; 🟡 Опасн. БПЛА: ${stats.droneDanger} &nbsp; | Всего: ${stats.total}`;
+        }
+        const panelStats = document.getElementById('panelStats');
+        if (panelStats) panelStats.innerText = `📊 ${stats.total} тревог`;
+    }
+    
+    function updateLastUpdateInfo() {
+        const infoDiv = document.getElementById('lastUpdateInfo');
+        if (lastUpdateTime) infoDiv.innerHTML = `📅 Последнее обновление: ${lastUpdateTime.toLocaleTimeString()}`;
+        else infoDiv.innerHTML = `📅 Последнее обновление: --:--`;
+    }
+    
+    // ---------- 3. ЗАГРУЗКА alerts.json ----------
     async function fetchAlerts() {
         try {
             const resp = await fetch("alerts.json?" + Date.now());
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
             if (data && data.regions) {
-                const newStatus = {};
                 for (const [region, st] of Object.entries(data.regions)) {
                     if (ignoredRegions.includes(region)) continue;
-                    newStatus[region] = { rocket: !!st.rocket, droneAlert: !!st.droneAlert, droneDanger: !!st.droneDanger };
+                    regionStatus[region] = {
+                        rocket: !!st.rocket,
+                        droneAlert: !!st.droneAlert,
+                        droneDanger: !!st.droneDanger
+                    };
                 }
                 for (const region of allRegionNames) {
-                    if (!newStatus[region]) newStatus[region] = { rocket: false, droneAlert: false, droneDanger: false };
+                    if (!regionStatus[region]) regionStatus[region] = { rocket: false, droneAlert: false, droneDanger: false };
                 }
-                regionStatus = newStatus;
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
                 updateStatusBar();
-            } else throw new Error("Формат JSON");
+                const statusDiv = document.getElementById('status');
+                const timeStr = lastUpdateTime.toLocaleTimeString();
+                statusDiv.style.backgroundColor = "rgba(0,0,0,0.85)";
+                setTimeout(() => {}, 500);
+            } else throw new Error("Неверный формат alerts.json");
         } catch (err) {
             console.error(err);
-            document.getElementById('status').innerHTML = `⚠️ Ошибка: ${err.message}`;
+            document.getElementById('status').innerHTML = `⚠️ Ошибка загрузки: ${err.message}`;
         }
     }
-
-    function updateLastUpdateInfo() {
-        const el = document.getElementById('lastUpdateInfo');
-        if(lastUpdateTime) el.innerHTML = `<i class="far fa-clock"></i> Обновление: ${lastUpdateTime.toLocaleTimeString()}`;
-        else el.innerHTML = `<i class="far fa-clock"></i> Ожидание...`;
-    }
-
-    function updateStatusBar() {
-        const stats = getStats();
-        const total = stats.rocket + stats.droneAlert + stats.droneDanger;
-        const statusDiv = document.getElementById('status');
-        if(statusDiv) {
-            statusDiv.innerHTML = `<i class="fas fa-chart-simple"></i> 🟤 Ракет: ${stats.rocket} &nbsp; 🔴 БПЛА-ПВО: ${stats.droneAlert} &nbsp; 🟡 БПЛА-опасн: ${stats.droneDanger} &nbsp; | Всего тревог: ${total}`;
-        }
-        // обновляем статистику в панели
-        const panelStats = document.getElementById('panelStats');
-        if(panelStats) panelStats.innerHTML = `📊 ${total} тревог`;
-    }
-
+    
+    // ---------- 4. ОТРИСОВКА КАРТЫ И ПАНЕЛИ ----------
     function getEffectiveStatus(region) { return regionStatus[region] || { rocket: false, droneAlert: false, droneDanger: false }; }
     function getFillColor(effective) {
-        if(effective.rocket) return colors.rocket;
-        if(effective.droneAlert) return colors.droneAlert;
-        if(effective.droneDanger) return colors.droneDanger;
+        if (effective.rocket) return colors.rocket;
+        if (effective.droneAlert) return colors.droneAlert;
+        if (effective.droneDanger) return colors.droneDanger;
         return colors.clear;
     }
     function getPopupContent(regionName, effective) {
-        let text = "", color="";
-        if(effective.rocket) { text = "🟤 РАКЕТНАЯ ОПАСНОСТЬ! УКРЫТЬСЯ!"; color="#ff8866"; }
-        else if(effective.droneAlert) { text = "🔴 ТРЕВОГА БПЛА! Работа ПВО"; color="#ff6666"; }
-        else if(effective.droneDanger) { text = "🟡 Опасность БПЛА в регионе"; color="#ffc107"; }
-        else { text = "⚡ Отбой / Спокойно"; color="#a0c0e0"; }
-        return `<div style="font-family:Segoe UI;"><b>${regionName}</b><br><span style="color:${color}">${text}</span></div>`;
+        let text = "", color = "";
+        if (effective.rocket) { text = "🟤 РАКЕТНАЯ ОПАСНОСТЬ! Укрытие!"; color = "#ffaaaa"; }
+        else if (effective.droneAlert) { text = "🔴 ТРЕВОГА БПЛА! Фиксация / Работа ПВО"; color = "#ff8888"; }
+        else if (effective.droneDanger) { text = "🟡 Опасность БПЛА в регионе"; color = "#ffc107"; }
+        else { text = "⚪ Отбой / Спокойно"; color = "#adb5bd"; }
+        return `<div style="font-family:'Segoe UI';min-width:160px;"><b>${regionName}</b><br><span style="color:${color}">${text}</span></div>`;
     }
-
+    
     function updateMapAndPanel() {
-        if(!polygonsLayer) return;
+        if (!polygonsLayer) return;
         polygonsLayer.eachLayer(layer => {
-            const norm = normalizeRegionName(layer.regionName);
-            const effective = getEffectiveStatus(norm);
-            // Убираем оранжевые границы: все границы серые, единые
-            layer.setStyle({ fillColor: getFillColor(effective), fillOpacity: 0.75, weight: 1.5, color: '#444' });
-            if(effective.rocket || effective.droneAlert) {
-                if(layer._path) layer._path.classList.add('glow-border');
-                else layer.on('add', ()=> { if(layer._path) layer._path.classList.add('glow-border'); });
-            } else {
-                if(layer._path) layer._path.classList.remove('glow-border');
-            }
+            const geoName = layer.regionName;
+            if (!geoName) return;
+            const normName = normalizeRegionName(geoName);
+            const effective = getEffectiveStatus(normName);
+            layer.setStyle({ fillColor: getFillColor(effective), fillOpacity: 0.7, color: "#fff", weight: 2.2 });
             const popup = layer.getPopup();
-            if(popup) popup.setContent(getPopupContent(norm, effective));
+            if (popup) popup.setContent(getPopupContent(normName, effective));
         });
         updateAlertsPanel();
         updateStatusBar();
     }
-
+    
     function updateAlertsPanel() {
         const panelDiv = document.getElementById('panelContent');
         const active = [];
         for (const [region, st] of Object.entries(regionStatus)) {
-            if(ignoredRegions.includes(region)) continue;
-            if(st.rocket) active.push({ name: region, type: 'rocket', label: '🟤 Ракетная опасность', priority:1 });
-            else if(st.droneAlert) active.push({ name: region, type: 'droneAlert', label: '🔴 Тревога БПЛА (ПВО)', priority:2 });
-            else if(st.droneDanger) active.push({ name: region, type: 'droneDanger', label: '🟡 Опасность БПЛА', priority:3 });
+            if (ignoredRegions.includes(region)) continue;
+            if (st.rocket) active.push({ name: region, type: 'rocket', label: '🟤 Ракетная опасность', priority: 1 });
+            else if (st.droneAlert) active.push({ name: region, type: 'droneAlert', label: '🔴 Тревога БПЛА (фиксация/ПВО)', priority: 2 });
+            else if (st.droneDanger) active.push({ name: region, type: 'droneDanger', label: '🟡 Опасность БПЛА', priority: 3 });
         }
-        if(active.length===0) { panelDiv.innerHTML = '<div class="empty-message"><i class="far fa-check-circle"></i> Нет активных тревог</div>'; return; }
-        active.sort((a,b)=>a.priority-b.priority);
-        panelDiv.innerHTML = active.map(r => `<div class="alert-region-item ${r.type}"><div class="region-name"><i class="fas fa-map-pin"></i> ${r.name}</div><div class="alert-type ${r.type}">${r.label}</div></div>`).join('');
+        if (active.length === 0) { panelDiv.innerHTML = '<div class="empty-message">✨ Нет активных тревог</div>'; return; }
+        active.sort((a,b) => a.priority - b.priority);
+        panelDiv.innerHTML = active.map(r => `
+            <div class="alert-region-item ${r.type}">
+                <div class="region-name">${r.name}</div>
+                <div class="alert-type ${r.type}">${r.label}</div>
+            </div>
+        `).join('');
     }
-
-    // --- ЛИНЕЙКА ---
+    
+    // ---------- 5. КОПИРОВАНИЕ СПИСКА ----------
+    function getCurrentDateTimeString() {
+        const now = new Date();
+        return `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
+    }
+    async function copyAlertsList() {
+        const active = [];
+        for (const [region, st] of Object.entries(regionStatus)) {
+            if (ignoredRegions.includes(region)) continue;
+            if (st.rocket) active.push({ name: region, label: '🟤 Ракетная опасность', priority: 1 });
+            else if (st.droneAlert) active.push({ name: region, label: '🔴 Тревога БПЛА (фиксация/работа ПВО)', priority: 2 });
+            else if (st.droneDanger) active.push({ name: region, label: '🟡 Опасность БПЛА', priority: 3 });
+        }
+        if (active.length === 0) { showToast("✨ Нет активных тревог"); return; }
+        active.sort((a,b) => a.priority - b.priority);
+        const lines = active.map(a => `${a.label}: ${a.name}`);
+        const text = `📅 Активные тревоги на ${getCurrentDateTimeString()}\n${lines.join('\n')}`;
+        try { await navigator.clipboard.writeText(text); showToast(`📋 Скопировано ${active.length} тревог`); }
+        catch { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(`📋 Скопировано ${active.length} тревог`); }
+    }
+    function showToast(msg) {
+        const old = document.querySelector('.copy-toast');
+        if (old) old.remove();
+        const toast = document.createElement('div'); toast.className = 'copy-toast'; toast.textContent = msg;
+        document.body.appendChild(toast); setTimeout(() => toast.remove(), 2000);
+    }
+    
+    // ---------- 6. ЛИНЕЙКА (с отключением кликов по полигонам) ----------
     let rulerModeActive = false;
     let points = [];
-    let lineLayer = null, markersLayer = null;
+    let lineLayer = null;
+    let markersLayer = null;
     const speeds = { drone: 180, jet_drone: 450, cruise: 850, ballistic: 9000 };
-    function calculateTime(distKm, speed) { if(distKm<=0) return "0 мин"; const hours = distKm/speed; const mins = hours*60; if(mins<1) return "< 1 мин"; if(mins>=60) return `${Math.floor(mins/60)} ч ${Math.floor(mins%60)} мин`; return `${Math.floor(mins)} мин`; }
+    
+    function calculateTime(distanceKm, speedKmh) {
+        if (distanceKm <= 0) return "0 мин";
+        const hours = distanceKm / speedKmh;
+        const totalMinutes = hours * 60;
+        if (totalMinutes < 1) return "< 1 мин";
+        const hrs = Math.floor(totalMinutes / 60);
+        const mins = Math.floor(totalMinutes % 60);
+        if (hrs > 0) return `${hrs} ч ${mins} мин`;
+        return `${mins} мин`;
+    }
     function updateRulerDisplay() {
-        if(points.length<2) { document.getElementById('distKm').innerText='0'; document.getElementById('timeResult').innerHTML='—'; return; }
-        const dist = points[0].getLatLng().distanceTo(points[1].getLatLng())/1000;
-        document.getElementById('distKm').innerText=dist.toFixed(1);
+        if (points.length < 2) {
+            document.getElementById('distKm').innerText = '0';
+            document.getElementById('timeResult').innerHTML = '—';
+            return;
+        }
+        const dist = points[0].getLatLng().distanceTo(points[1].getLatLng()) / 1000;
+        document.getElementById('distKm').innerText = dist.toFixed(1);
         const threat = document.getElementById('threatType').value;
         const timeStr = calculateTime(dist, speeds[threat]);
-        document.getElementById('timeResult').innerHTML=timeStr;
+        document.getElementById('timeResult').innerHTML = timeStr;
     }
     function updateRulerGraphics() {
-        if(lineLayer) map.removeLayer(lineLayer);
-        if(markersLayer) map.removeLayer(markersLayer);
-        if(points.length===0) return;
+        if (lineLayer) map.removeLayer(lineLayer);
+        if (markersLayer) map.removeLayer(markersLayer);
+        if (points.length === 0) return;
         markersLayer = L.layerGroup().addTo(map);
         points.forEach(m => markersLayer.addLayer(m));
-        if(points.length===2) {
-            const latlngs = points.map(p=>p.getLatLng());
-            lineLayer = L.polyline(latlngs, { color: '#ffc107', weight: 5, dashArray: '8, 8', opacity: 0.9 }).addTo(map);
+        if (points.length === 2) {
+            const latlngs = points.map(p => p.getLatLng());
+            lineLayer = L.polyline(latlngs, { color: '#ffc107', weight: 4, dashArray: '8, 6' }).addTo(map);
         }
         updateRulerDisplay();
     }
     function addRulerPoint(e) {
-        if(!rulerModeActive) return;
-        if(points.length>=2) clearRuler();
-        const marker = L.marker(e.latlng, { draggable: true, icon: L.divIcon({ className: 'ruler-marker', html: `<div style="background:#ffaa33; width:14px; height:14px; border-radius:50%; border:2px solid white; box-shadow:0 0 8px gold;"></div>`, iconSize: [14,14] }) });
-        marker.on('dragend', () => updateRulerGraphics());
+        if (!rulerModeActive) return;
+        if (points.length >= 2) clearRuler();
+        const marker = L.marker(e.latlng, {
+            draggable: true,
+            icon: L.divIcon({ className: 'ruler-marker', html: `<div style="background:#ffc107; width:12px; height:12px; border-radius:50%; border:2px solid white;"></div>`, iconSize: [12,12] })
+        });
+        marker.on('dragend', () => { updateRulerGraphics(); });
         points.push(marker);
         updateRulerGraphics();
     }
     function clearRuler() {
-        if(lineLayer) map.removeLayer(lineLayer);
-        if(markersLayer) map.removeLayer(markersLayer);
-        points.forEach(m=>m.remove());
-        points=[]; lineLayer=null; markersLayer=null;
+        if (lineLayer) map.removeLayer(lineLayer);
+        if (markersLayer) map.removeLayer(markersLayer);
+        points.forEach(m => m.remove());
+        points = [];
+        lineLayer = null;
+        markersLayer = null;
         updateRulerDisplay();
     }
     function setRulerMode(active) {
         rulerModeActive = active;
-        const btn = document.getElementById('rulerBtn');
+        const rulerBtn = document.getElementById('rulerBtn');
         const panel = document.getElementById('rulerPanel');
-        if(active) {
-            btn.classList.add('active'); panel.classList.add('show');
+        if (active) {
+            rulerBtn.classList.add('active');
+            panel.classList.add('show');
             map.getContainer().style.cursor = 'crosshair';
-            if(polygonsLayer) {
+            if (polygonsLayer) {
                 polygonsLayer.eachLayer(layer => {
-                    if(layer._path) layer._path.classList.add('leaflet-interactive-off');
+                    if (layer._path) layer._path.classList.add('leaflet-interactive-off');
                 });
             }
             map.on('click', addRulerPoint);
         } else {
-            btn.classList.remove('active'); panel.classList.remove('show');
+            rulerBtn.classList.remove('active');
+            panel.classList.remove('show');
             map.getContainer().style.cursor = '';
-            if(polygonsLayer) {
+            if (polygonsLayer) {
                 polygonsLayer.eachLayer(layer => {
-                    if(layer._path) layer._path.classList.remove('leaflet-interactive-off');
+                    if (layer._path) layer._path.classList.remove('leaflet-interactive-off');
                 });
             }
             map.off('click', addRulerPoint);
             clearRuler();
         }
     }
-
-    // --- ГРАНИЦЫ ---
+    
+    // ---------- 7. ЗАГРУЗКА ГРАНИЦ (GeoJSON) ----------
     function loadPolygons() {
         const url = "https://raw.githubusercontent.com/azatkh/ru-regions-geojson/main/regions.geojson";
         const fallback = "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/russia.geojson";
-        fetch(url).then(r => r.ok ? r.json() : Promise.reject()).then(data => applyPolygons(data)).catch(() => fetch(fallback).then(r=>r.json()).then(data=>applyPolygons(data)).catch(e=>console.warn("no borders",e)));
+        fetch(url).then(r => r.ok ? r.json() : Promise.reject())
+            .then(data => applyPolygons(data))
+            .catch(() => fetch(fallback).then(r => r.json()).then(data => applyPolygons(data))
+            .catch(e => console.warn("Границы не загружены", e)));
     }
     function applyPolygons(geoData) {
-        if(polygonsLayer) map.removeLayer(polygonsLayer);
+        if (polygonsLayer) map.removeLayer(polygonsLayer);
         polygonsLayer = L.geoJSON(geoData, {
             style: (feature) => {
-                let name = feature.properties?.name || feature.properties?.NAME || "";
+                let name = feature.properties?.name || feature.properties?.NAME || feature.properties?.admin_name || "";
                 const norm = normalizeRegionName(name);
-                const eff = getEffectiveStatus(norm);
-                return { color: "#444", weight: 1.5, fillColor: getFillColor(eff), fillOpacity: 0.7 };
+                const effective = getEffectiveStatus(norm);
+                return { color: "#fff", weight: 2.2, fillColor: getFillColor(effective), fillOpacity: 0.7, smoothFactor: 0.5 };
             },
             onEachFeature: (f, layer) => {
-                let name = f.properties?.name || f.properties?.NAME || "";
-                if(name) { layer.regionName = name; const norm = normalizeRegionName(name); const eff = getEffectiveStatus(norm); layer.bindPopup(getPopupContent(norm, eff), { className: 'custom-popup' }); }
+                let name = f.properties?.name || f.properties?.NAME || f.properties?.admin_name || "";
+                if (name) {
+                    const norm = normalizeRegionName(name);
+                    layer.regionName = norm;
+                    const effective = getEffectiveStatus(norm);
+                    layer.bindPopup(getPopupContent(norm, effective), { className: 'custom-popup' });
+                }
             }
         }).addTo(map);
-        try { map.fitBounds(polygonsLayer.getBounds()); } catch(e) { map.setView([62,105],3.8); }
-        document.getElementById('status').innerHTML = "🗺 Границы загружены";
+        try { map.fitBounds(polygonsLayer.getBounds()); } catch(e) { map.setView([62, 105], 3.8); }
+        document.getElementById('status').innerHTML = 'Границы загружены';
         updateMapAndPanel();
     }
-
-    // --- ЧАСЫ, ТЕМА, КОПИРОВАНИЕ ---
-    function updateClock() { const now = new Date(); document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'}); document.getElementById('liveDate').innerHTML = now.toLocaleDateString('ru', {day:'numeric', month:'long', weekday:'short'}); }
-    updateClock(); setInterval(updateClock, 1000);
-
-    const themeBtn = document.getElementById('themeToggleBtn');
-    themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        if(document.body.classList.contains('light-theme')) {
-            themeBtn.innerHTML = '<i class="fas fa-sun"></i> Тема';
-            setTileLayer(lightTile);
-        } else { themeBtn.innerHTML = '<i class="fas fa-moon"></i> Тема'; setTileLayer(darkTile); }
-    });
-
-    function showToast(msg) { const old = document.querySelector('.copy-toast'); if(old) old.remove(); const t = document.createElement('div'); t.className='copy-toast'; t.innerHTML=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
-    async function copyAlertsList() {
-        const active=[];
-        for (const [region, st] of Object.entries(regionStatus)) { if(ignoredRegions.includes(region)) continue; if(st.rocket) active.push({name:region,label:'🟤 Ракетная опасность'}); else if(st.droneAlert) active.push({name:region,label:'🔴 Тревога БПЛА (ПВО)'}); else if(st.droneDanger) active.push({name:region,label:'🟡 Опасность БПЛА'}); }
-        if(active.length===0) { showToast("Нет активных тревог"); return; }
-        const text = `📅 Тревоги на ${new Date().toLocaleString()}\n${active.map(a=>`${a.label}: ${a.name}`).join('\n')}`;
-        await navigator.clipboard.writeText(text); showToast(`📋 Скопировано ${active.length} тревог`);
+    
+    // ---------- 8. ЧАСЫ, ТЕМА, АВТООБНОВЛЕНИЕ ----------
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', { hour:'2-digit', minute:'2-digit' });
+        document.getElementById('liveDate').innerHTML = now.toLocaleDateString('ru', { day:'numeric', month:'long', weekday:'long' });
     }
-
-    // --- ИНИЦИАЛИЗАЦИЯ ---
+    updateClock(); setInterval(updateClock, 60000);
+    
+    // Переключение темы
+    const themeBtn = document.getElementById('themeBtn');
+    let isLightTheme = false;
+    themeBtn.addEventListener('click', () => {
+        isLightTheme = !isLightTheme;
+        document.body.classList.toggle('light-theme', isLightTheme);
+        themeBtn.innerHTML = isLightTheme ? '☀️ Тема' : '🌙 Тема';
+        switchTileTheme(isLightTheme);
+    });
+    
     loadPolygons();
-    setTimeout(()=>{ fetchAlerts(); setInterval(fetchAlerts, 60000); }, 800);
+    setTimeout(() => {
+        fetchAlerts();
+        setInterval(fetchAlerts, 60000);
+    }, 1000);
+    
+    // ---------- 9. ОБРАБОТЧИКИ КНОПОК ----------
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
-    document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
-    document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
+    document.getElementById('clearRulerBtn').addEventListener('click', () => clearRuler());
+    document.getElementById('threatType').addEventListener('change', () => updateRulerDisplay());
+    
     const panel = document.getElementById('alertsPanel');
     document.getElementById('openPanelBtn').addEventListener('click', () => { panel.classList.add('open'); updateAlertsPanel(); });
     document.getElementById('closePanelBtn').addEventListener('click', () => panel.classList.remove('open'));
-    document.getElementById('copyAlertsBtn').addEventListener('click', copyAlertsList);
-    document.addEventListener('click', (e) => { if(panel.classList.contains('open') && !panel.contains(e.target) && e.target !== document.getElementById('openPanelBtn')) panel.classList.remove('open'); });
+    document.getElementById('copyAlertsBtn').addEventListener('click', () => copyAlertsList());
+    document.addEventListener('click', (e) => {
+        if (panel.classList.contains('open') && !panel.contains(e.target) && e.target !== document.getElementById('openPanelBtn'))
+            panel.classList.remove('open');
+    });
     window.addEventListener('resize', () => map.invalidateSize());
 })();
 </script>
