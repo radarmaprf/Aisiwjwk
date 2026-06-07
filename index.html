@@ -5,28 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Air Alert Map — Мониторинг угроз РФ</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <!-- Font Awesome 6 (free icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none; /* для чистоты интерфейса, но не мешает тексту */
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #03050b;
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
             overflow: hidden;
-            transition: background 0.3s ease, color 0.2s ease;
+            transition: background 0.3s ease;
         }
-
-        /* --- Светлая тема (опционально) --- */
+        /* Светлая тема */
         body.light-theme {
             background: #eef2f5;
         }
-        body.light-theme .glass-panel,
         body.light-theme .toolbar,
         body.light-theme .legend,
         body.light-theme .update-info,
@@ -49,16 +40,7 @@
         body.light-theme .alert-region-item {
             background: rgba(0, 0, 0, 0.05);
         }
-
-        /* --- ГЛАВНЫЕ СТИЛИ: стекло + неон --- */
-        .glass-panel {
-            background: rgba(10, 14, 26, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 28px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
+        /* Часы */
         .clock {
             position: fixed;
             top: 20px;
@@ -68,12 +50,9 @@
             backdrop-filter: blur(12px);
             border-radius: 40px;
             padding: 8px 20px;
-            color: #f0f3fa;
-            font-family: 'JetBrains Mono', monospace;
             text-align: center;
             border: 1px solid rgba(255, 215, 0, 0.3);
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: all 0.2s;
         }
         .time-main {
             font-size: 1.9rem;
@@ -90,9 +69,7 @@
             opacity: 0.85;
             margin-top: 4px;
             text-transform: uppercase;
-            font-weight: 500;
         }
-
         /* Легенда */
         .legend {
             position: fixed;
@@ -105,13 +82,10 @@
             padding: 12px 18px;
             color: #eef2ff;
             font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(255,255,240,0.15);
             display: flex;
             flex-direction: column;
             gap: 8px;
             pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         .legend-item {
             display: flex;
@@ -122,9 +96,7 @@
             width: 28px;
             height: 18px;
             border-radius: 20px;
-            box-shadow: 0 0 4px currentColor;
         }
-
         /* Инфо обновления */
         .update-info {
             position: fixed;
@@ -133,16 +105,13 @@
             z-index: 2000;
             background: rgba(0,0,0,0.65);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,200,0.2);
             border-radius: 40px;
             padding: 6px 18px;
             color: #ccc;
             font-size: 0.75rem;
             font-family: monospace;
-            font-weight: 500;
             pointer-events: none;
         }
-
         .status {
             position: fixed;
             bottom: 20px;
@@ -160,7 +129,6 @@
             pointer-events: none;
             border: 1px solid rgba(255,255,100,0.3);
         }
-
         /* Кнопка открыть панель тревог */
         .alert-list-btn {
             position: fixed;
@@ -183,10 +151,8 @@
             align-items: center;
             gap: 8px;
         }
-        .alert-list-btn i { font-size: 1.1rem; }
-        .alert-list-btn:hover { transform: scale(1.02); background: #9c1f2e; box-shadow: 0 6px 18px rgba(0,0,0,0.4); }
-
-        /* Панель инструментов (линейка + тема и т.д.) */
+        .alert-list-btn:hover { transform: scale(1.02); background: #9c1f2e; }
+        /* Панель инструментов */
         .toolbar {
             position: fixed;
             top: 20px;
@@ -216,13 +182,11 @@
             align-items: center;
             gap: 6px;
         }
-        .tool-btn i { font-size: 0.9rem; }
-        .tool-btn.active { background: #2ecc71; box-shadow: 0 0 12px #2ecc71; color: #fff; }
+        .tool-btn.active { background: #2ecc71; box-shadow: 0 0 12px #2ecc71; }
         .tool-btn:hover { background: #2ecc71; transform: translateY(-2px); }
         .tool-btn.danger { background: #e67e22; }
         .tool-btn.danger:hover { background: #d35400; }
-
-        /* Панель линейки (обновленный дизайн) */
+        /* Панель линейки — фон тёмный, текст всегда контрастный */
         .ruler-panel {
             position: fixed;
             top: 90px;
@@ -239,6 +203,7 @@
             gap: 12px;
             font-family: monospace;
             box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+            color: white; /* принудительно белый фон для всего текста внутри */
         }
         .ruler-panel.show { display: flex; }
         .ruler-panel h4 { margin: 0; color: #ffc107; font-size: 1.1rem; display: flex; gap: 8px; align-items: center; }
@@ -256,6 +221,7 @@
             padding: 10px;
             border-radius: 20px;
             text-align: center;
+            color: #eee;
         }
         .time-result {
             font-size: 1.4rem;
@@ -264,8 +230,7 @@
             text-shadow: 0 0 6px #ffaa3350;
             margin-top: 6px;
         }
-
-        /* Панель списка тревог 2.0 */
+        /* Панель списка тревог */
         .alerts-panel {
             position: fixed;
             top: 0;
@@ -325,17 +290,8 @@
         .alert-region-item.rocket { border-left-color: #ff4500; background: linear-gradient(95deg, #2a121f, #1f0f1a); }
         .alert-region-item.droneAlert { border-left-color: #dc3545; }
         .alert-region-item.droneDanger { border-left-color: #ffc107; }
-        .region-name { font-weight: bold; font-size: 1rem; margin-bottom: 6px; letter-spacing: -0.2px; }
+        .region-name { font-weight: bold; font-size: 1rem; margin-bottom: 6px; }
         .alert-type { font-size: 0.75rem; display: inline-block; padding: 4px 12px; border-radius: 60px; font-weight: 600; }
-        .stat-badge {
-            background: #2c2f3f;
-            border-radius: 60px;
-            padding: 6px 12px;
-            font-size: 0.7rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
         .copy-toast {
             position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
             background: #2ecc71; color: #111; padding: 8px 20px; border-radius: 60px;
@@ -343,7 +299,6 @@
             pointer-events: none; font-family: monospace;
         }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
-        /* glow effect для опасных регионов */
         .glow-border {
             filter: drop-shadow(0 0 5px rgba(255, 60, 0, 0.8));
             animation: pulseGlow 1.2s infinite;
@@ -354,7 +309,10 @@
         }
         .custom-popup .leaflet-popup-content-wrapper { background: #151e2c; color: #fff; border-radius: 20px; border-left: 4px solid #ffc107; }
         .leaflet-control-attribution { display: none; }
-        .ruler-marker div { transition: all 0.1s; }
+        /* Класс для отключения кликов по полигонам во время линейки */
+        .leaflet-interactive-off {
+            pointer-events: none !important;
+        }
         @media (max-width: 650px) {
             .toolbar { top: 75px; padding: 5px 12px; gap: 6px; }
             .tool-btn { padding: 4px 12px; font-size: 0.7rem; }
@@ -364,20 +322,6 @@
             .ruler-panel { width: 240px; top: 110px; left: 10px; }
             .legend { bottom: 12px; left: 12px; padding: 8px 12px; }
         }
-        /* кнопка звука и темы */
-        .sound-toggle, .theme-toggle {
-            background: rgba(0,0,0,0.6);
-            border-radius: 40px;
-            width: 36px;
-            height: 36px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .sound-toggle:hover, .theme-toggle:hover { background: #2ecc71; }
-        .extra-tools { display: flex; gap: 8px; margin-left: 6px; }
     </style>
 </head>
 <body>
@@ -388,14 +332,11 @@
 <div class="toolbar">
     <button id="rulerBtn" class="tool-btn"><i class="fas fa-ruler"></i> Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger"><i class="fas fa-trash-alt"></i> Сброс</button>
-    <div class="extra-tools">
-        <div id="soundToggleBtn" class="sound-toggle tool-btn" style="padding: 0; width: 36px;"><i class="fas fa-volume-up"></i></div>
-        <div id="themeToggleBtn" class="theme-toggle tool-btn" style="padding: 0; width: 36px;"><i class="fas fa-moon"></i></div>
-    </div>
+    <div id="themeToggleBtn" class="tool-btn" style="padding: 6px 18px;"><i class="fas fa-moon"></i> Тема</div>
 </div>
 
 <div class="legend">
-    <div class="legend-item"><div class="legend-color" style="background: #6c757d; box-shadow:0 0 2px #fff;"></div> <span>⚪ Безопасно</span></div>
+    <div class="legend-item"><div class="legend-color" style="background: #6c757d;"></div> <span>⚪ Безопасно</span></div>
     <div class="legend-item"><div class="legend-color" style="background: #ffc107;"></div> <span>🟡 Опасность БПЛА</span></div>
     <div class="legend-item"><div class="legend-color" style="background: #dc3545;"></div> <span>🔴 Тревога БПЛА (ПВО)</span></div>
     <div class="legend-item"><div class="legend-color" style="background: #b13b00;"></div> <span>🟤 Ракетная угроза</span></div>
@@ -433,32 +374,22 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
-    // -------------------- КАРТА --------------------
+    // --- КАРТА ---
     const map = L.map('map').setView([62, 105], 3.8);
-    // базовый тайл (темный)
     const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2 });
     const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '', subdomains: 'abcd' });
-    const satelliteTile = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '', maxZoom: 10 });
     let currentTile = darkTile;
     currentTile.addTo(map);
-    
-    // Переключение слоев (для пользователя)
-    function setTileLayer(layer) {
-        map.removeLayer(currentTile);
-        currentTile = layer;
-        currentTile.addTo(map);
-    }
-    
-    // -------------------- ДАННЫЕ --------------------
+    function setTileLayer(layer) { map.removeLayer(currentTile); currentTile = layer; currentTile.addTo(map); }
+
+    // --- ДАННЫЕ ---
     let polygonsLayer = null;
-    let regionStatus = {};          // { region: {rocket, droneAlert, droneDanger} }
+    let regionStatus = {}; // { регион: {rocket, droneAlert, droneDanger} }
     let lastUpdateTime = null;
-    let prevStatusStr = "";         // для звуковых оповещений
-    let soundEnabled = true;
-    let audioCtx = null;
     const colors = { clear: "#6c757d", droneDanger: "#ffc107", droneAlert: "#dc3545", rocket: "#b13b00" };
     
-    const allRegionNames = [ "Москва", "Московская область", "Санкт-Петербург", "Ленинградская область",
+    const allRegionNames = [
+        "Москва", "Московская область", "Санкт-Петербург", "Ленинградская область",
         "Белгородская область", "Брянская область", "Владимирская область", "Воронежская область",
         "Ивановская область", "Калужская область", "Костромская область", "Курская область",
         "Липецкая область", "Нижегородская область", "Новгородская область", "Орловская область",
@@ -488,50 +419,6 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
     
-    // Звук (короткий сигнал)
-    function playAlertSound() {
-        if (!soundEnabled) return;
-        try {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.frequency.value = 880;
-            gain.gain.value = 0.3;
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + 1);
-            osc.stop(audioCtx.currentTime + 0.8);
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-        } catch(e) { console.warn("audio error", e); }
-    }
-    
-    function checkForNewAlerts(newStatus) {
-        const newStr = JSON.stringify(newStatus);
-        if (prevStatusStr && prevStatusStr !== newStr) {
-            // если появились новые тревоги (хотя бы одна активная)
-            let oldActive = false, newActive = false;
-            try {
-                const oldObj = JSON.parse(prevStatusStr);
-                const newObj = JSON.parse(newStr);
-                for(let r in newObj) {
-                    if(newObj[r].rocket || newObj[r].droneAlert || newObj[r].droneDanger) newActive=true;
-                }
-                for(let r in oldObj) {
-                    if(oldObj[r].rocket || oldObj[r].droneAlert || oldObj[r].droneDanger) oldActive=true;
-                }
-                if(newActive && !oldActive) playAlertSound();
-                else if(newActive && oldActive) {
-                    // дополнительно если изменился тип на более опасный - тоже сигнал
-                    playAlertSound();
-                }
-            } catch(e){}
-        }
-        prevStatusStr = newStr;
-    }
-    
     // Загрузка alerts.json
     async function fetchAlerts() {
         try {
@@ -547,7 +434,6 @@
                 for (const region of allRegionNames) {
                     if (!newStatus[region]) newStatus[region] = { rocket: false, droneAlert: false, droneDanger: false };
                 }
-                checkForNewAlerts(newStatus);
                 regionStatus = newStatus;
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
@@ -630,7 +516,7 @@
         }
     }
     
-    // -------------------- ЛИНЕЙКА --------------------
+    // --- ЛИНЕЙКА (с отключением кликов по полигонам) ---
     let rulerModeActive = false;
     let points = [];
     let lineLayer = null, markersLayer = null;
@@ -678,18 +564,27 @@
         if(active) {
             btn.classList.add('active'); panel.classList.add('show');
             map.getContainer().style.cursor = 'crosshair';
-            if(polygonsLayer) polygonsLayer.eachLayer(layer => { if(layer._path) layer._path.classList.add('leaflet-interactive-off'); });
+            // Отключаем клики по полигонам, чтобы линейка работала на территории регионов
+            if(polygonsLayer) {
+                polygonsLayer.eachLayer(layer => {
+                    if(layer._path) layer._path.classList.add('leaflet-interactive-off');
+                });
+            }
             map.on('click', addRulerPoint);
         } else {
             btn.classList.remove('active'); panel.classList.remove('show');
             map.getContainer().style.cursor = '';
-            if(polygonsLayer) polygonsLayer.eachLayer(layer => { if(layer._path) layer._path.classList.remove('leaflet-interactive-off'); });
+            if(polygonsLayer) {
+                polygonsLayer.eachLayer(layer => {
+                    if(layer._path) layer._path.classList.remove('leaflet-interactive-off');
+                });
+            }
             map.off('click', addRulerPoint);
             clearRuler();
         }
     }
     
-    // -------------------- ГРАНИЦЫ --------------------
+    // --- ГРАНИЦЫ ---
     function loadPolygons() {
         const url = "https://raw.githubusercontent.com/azatkh/ru-regions-geojson/main/regions.geojson";
         const fallback = "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/russia.geojson";
@@ -714,21 +609,18 @@
         updateMapAndPanel();
     }
     
-    // -------------------- ЧАСЫ, ТЕМА, ЗВУК --------------------
+    // --- ЧАСЫ, ТЕМА, КОПИРОВАНИЕ ---
     function updateClock() { const now = new Date(); document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'}); document.getElementById('liveDate').innerHTML = now.toLocaleDateString('ru', {day:'numeric', month:'long', weekday:'short'}); }
     updateClock(); setInterval(updateClock, 1000);
     
-    // тема
     const themeBtn = document.getElementById('themeToggleBtn');
     themeBtn.addEventListener('click', () => {
         document.body.classList.toggle('light-theme');
         if(document.body.classList.contains('light-theme')) {
-            themeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+            themeBtn.innerHTML = '<i class="fas fa-sun"></i> Тема';
             setTileLayer(lightTile);
-        } else { themeBtn.innerHTML = '<i class="fas fa-moon"></i>'; setTileLayer(darkTile); }
+        } else { themeBtn.innerHTML = '<i class="fas fa-moon"></i> Тема'; setTileLayer(darkTile); }
     });
-    const soundBtn = document.getElementById('soundToggleBtn');
-    soundBtn.addEventListener('click', () => { soundEnabled = !soundEnabled; soundBtn.innerHTML = soundEnabled ? '<i class="fas fa-volume-up"></i>' : '<i class="fas fa-volume-mute"></i>'; showToast(`Звук ${soundEnabled ? "вкл" : "выкл"}`); });
     
     function showToast(msg) { const old = document.querySelector('.copy-toast'); if(old) old.remove(); const t = document.createElement('div'); t.className='copy-toast'; t.innerHTML=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2000); }
     async function copyAlertsList() {
@@ -739,7 +631,7 @@
         await navigator.clipboard.writeText(text); showToast(`📋 Скопировано ${active.length} тревог`);
     }
     
-    // Инициализация интерфейса
+    // --- ИНИЦИАЛИЗАЦИЯ ---
     loadPolygons();
     setTimeout(()=>{ fetchAlerts(); setInterval(fetchAlerts, 60000); }, 800);
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
