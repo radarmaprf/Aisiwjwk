@@ -377,7 +377,7 @@
     let polygonsLayer = null;
     let regionStatus = {};
     let lastUpdateTime = null;
-    const colors = { clear: "#6c757d", droneDanger: "#ffc107", droneAlert: "#dc3545", rocket: "#8B0000" }; // бордовый
+    const colors = { clear: "#6c757d", droneDanger: "#ffc107", droneAlert: "#dc3545", rocket: "#8B0000" };
 
     const allRegionNames = [
         "Москва", "Московская область", "Санкт-Петербург", "Ленинградская область",
@@ -465,7 +465,8 @@
         polygonsLayer.eachLayer(layer => {
             const norm = normalizeRegionName(layer.regionName);
             const effective = getEffectiveStatus(norm);
-            layer.setStyle({ fillColor: getFillColor(effective), fillOpacity: 0.75, weight: 2, color: effective.rocket ? '#ffaa66' : '#ddd' });
+            // Убираем оранжевые границы: теперь все границы имеют единый тёмно-серый цвет (weight: 1.5, color: '#444')
+            layer.setStyle({ fillColor: getFillColor(effective), fillOpacity: 0.75, weight: 1.5, color: '#444' });
             if(effective.rocket || effective.droneAlert) {
                 if(layer._path) layer._path.classList.add('glow-border');
                 else layer.on('add', ()=> { if(layer._path) layer._path.classList.add('glow-border'); });
@@ -586,7 +587,8 @@
                 let name = feature.properties?.name || feature.properties?.NAME || "";
                 const norm = normalizeRegionName(name);
                 const eff = getEffectiveStatus(norm);
-                return { color: "#fff", weight: 1.6, fillColor: getFillColor(eff), fillOpacity: 0.7 };
+                // здесь тоже делаем границы едиными, без оранжевого
+                return { color: "#444", weight: 1.5, fillColor: getFillColor(eff), fillOpacity: 0.7 };
             },
             onEachFeature: (f, layer) => {
                 let name = f.properties?.name || f.properties?.NAME || "";
