@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -114,16 +115,18 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 2000;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(12px);
             border-radius: 40px;
-            padding: 5px 18px;
-            color: #ddd;
-            font-size: 0.7rem;
+            padding: 8px 24px;
+            color: #ffd966;
+            font-size: 0.85rem;
+            font-weight: bold;
             font-family: monospace;
             white-space: nowrap;
             pointer-events: none;
-            border: 1px solid rgba(255,255,100,0.3);
+            border: 1px solid rgba(255,215,0,0.5);
+            letter-spacing: 0.5px;
         }
         .alert-list-btn {
             position: fixed;
@@ -249,6 +252,13 @@
             background: rgba(0,0,0,0.4);
         }
         .panel-header h3 { color: #ffc107; font-size: 1.3rem; margin: 0; display: flex; gap: 8px; }
+        .stats-badge {
+            background: rgba(0,0,0,0.6);
+            border-radius: 40px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            color: #ffd966;
+        }
         .copy-btn {
             background: rgba(255,255,255,0.1);
             border: none;
@@ -312,6 +322,7 @@
             .alerts-panel { width: 85%; left: -85%; }
             .ruler-panel { width: 240px; top: 110px; left: 10px; }
             .legend { bottom: 12px; left: 12px; padding: 8px 12px; }
+            .status { font-size: 0.65rem; padding: 4px 12px; white-space: nowrap; }
         }
     </style>
 </head>
@@ -334,7 +345,7 @@
 </div>
 
 <div class="update-info" id="lastUpdateInfo"><i class="far fa-clock"></i> Обновление: --:--</div>
-<div class="status" id="status"><i class="fas fa-sync-alt fa-spin"></i> Загрузка карты...</div>
+<div class="status" id="status"><i class="fas fa-chart-simple"></i> Загрузка...</div>
 
 <div id="rulerPanel" class="ruler-panel">
     <h4><i class="fas fa-charging-station"></i> Оценка угрозы</h4>
@@ -357,7 +368,11 @@
 <div id="alertsPanel" class="alerts-panel">
     <div class="panel-header">
         <h3><i class="fas fa-bell"></i> Активные тревоги</h3>
-        <div style="display: flex; gap: 12px;"><button class="copy-btn" id="copyAlertsBtn"><i class="fas fa-copy"></i> Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div>
+        <div style="display: flex; gap: 12px;">
+            <span class="stats-badge" id="panelStats">—</span>
+            <button class="copy-btn" id="copyAlertsBtn"><i class="fas fa-copy"></i> Копировать</button>
+            <button class="close-panel" id="closePanelBtn">&times;</button>
+        </div>
     </div>
     <div class="panel-content" id="panelContent"><div class="empty-message">📭 Нет активных тревог</div></div>
 </div>
@@ -410,6 +425,17 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
 
+    // Подсчёт статистики
+    function getStats() {
+        let rocket=0, droneAlert=0, droneDanger=0;
+        for(const st of Object.values(regionStatus)) {
+            if(st.rocket) rocket++;
+            else if(st.droneAlert) droneAlert++;
+            else if(st.droneDanger) droneDanger++;
+        }
+        return { rocket, droneAlert, droneDanger };
+    }
+
     async function fetchAlerts() {
         try {
             const resp = await fetch("alerts.json?" + Date.now());
@@ -428,9 +454,7 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
-                const timeStr = lastUpdateTime.toLocaleTimeString();
-                document.getElementById('status').innerHTML = `✅ Данные: ${timeStr}`;
-                setTimeout(()=>{ if(document.getElementById('status').innerHTML.includes('✅')) document.getElementById('status').innerHTML = `📡 Актуально на ${timeStr}`; }, 3000);
+                updateStatusBar();
             } else throw new Error("Формат JSON");
         } catch (err) {
             console.error(err);
@@ -442,6 +466,18 @@
         const el = document.getElementById('lastUpdateInfo');
         if(lastUpdateTime) el.innerHTML = `<i class="far fa-clock"></i> Обновление: ${lastUpdateTime.toLocaleTimeString()}`;
         else el.innerHTML = `<i class="far fa-clock"></i> Ожидание...`;
+    }
+
+    function updateStatusBar() {
+        const stats = getStats();
+        const total = stats.rocket + stats.droneAlert + stats.droneDanger;
+        const statusDiv = document.getElementById('status');
+        if(statusDiv) {
+            statusDiv.innerHTML = `<i class="fas fa-chart-simple"></i> 🟤 Ракет: ${stats.rocket} &nbsp; 🔴 БПЛА-ПВО: ${stats.droneAlert} &nbsp; 🟡 БПЛА-опасн: ${stats.droneDanger} &nbsp; | Всего тревог: ${total}`;
+        }
+        // обновляем статистику в панели
+        const panelStats = document.getElementById('panelStats');
+        if(panelStats) panelStats.innerHTML = `📊 ${total} тревог`;
     }
 
     function getEffectiveStatus(region) { return regionStatus[region] || { rocket: false, droneAlert: false, droneDanger: false }; }
@@ -465,7 +501,7 @@
         polygonsLayer.eachLayer(layer => {
             const norm = normalizeRegionName(layer.regionName);
             const effective = getEffectiveStatus(norm);
-            // Убираем оранжевые границы: теперь все границы имеют единый тёмно-серый цвет (weight: 1.5, color: '#444')
+            // Убираем оранжевые границы: все границы серые, единые
             layer.setStyle({ fillColor: getFillColor(effective), fillOpacity: 0.75, weight: 1.5, color: '#444' });
             if(effective.rocket || effective.droneAlert) {
                 if(layer._path) layer._path.classList.add('glow-border');
@@ -477,7 +513,7 @@
             if(popup) popup.setContent(getPopupContent(norm, effective));
         });
         updateAlertsPanel();
-        updateStatsWidget();
+        updateStatusBar();
     }
 
     function updateAlertsPanel() {
@@ -492,19 +528,6 @@
         if(active.length===0) { panelDiv.innerHTML = '<div class="empty-message"><i class="far fa-check-circle"></i> Нет активных тревог</div>'; return; }
         active.sort((a,b)=>a.priority-b.priority);
         panelDiv.innerHTML = active.map(r => `<div class="alert-region-item ${r.type}"><div class="region-name"><i class="fas fa-map-pin"></i> ${r.name}</div><div class="alert-type ${r.type}">${r.label}</div></div>`).join('');
-    }
-
-    function updateStatsWidget() {
-        let rocket=0, droneA=0, droneD=0;
-        for(const st of Object.values(regionStatus)) {
-            if(st.rocket) rocket++;
-            else if(st.droneAlert) droneA++;
-            else if(st.droneDanger) droneD++;
-        }
-        const statDiv = document.getElementById('status');
-        if(statDiv && !statDiv.innerHTML.includes('Ошибка')) {
-            statDiv.innerHTML = `🔥 Ракет:${rocket}  🚁 БПЛА-ПВО:${droneA}  ⚠️ БПЛА-опасн:${droneD} | ${lastUpdateTime ? lastUpdateTime.toLocaleTimeString() : ''}`;
-        }
     }
 
     // --- ЛИНЕЙКА ---
@@ -587,7 +610,6 @@
                 let name = feature.properties?.name || feature.properties?.NAME || "";
                 const norm = normalizeRegionName(name);
                 const eff = getEffectiveStatus(norm);
-                // здесь тоже делаем границы едиными, без оранжевого
                 return { color: "#444", weight: 1.5, fillColor: getFillColor(eff), fillOpacity: 0.7 };
             },
             onEachFeature: (f, layer) => {
