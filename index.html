@@ -36,7 +36,7 @@
         .clock {
             position: fixed;
             top: 20px;
-            right: 80px; /* смещаем, чтобы не перекрывало шестерёнку */
+            right: 80px;
             z-index: 2000;
             background: rgba(10,14,26,0.85);
             backdrop-filter: blur(8px);
@@ -58,7 +58,6 @@
         }
         .date { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; }
 
-        /* Шестерёнка (настройки) */
         .settings-gear {
             position: fixed;
             top: 20px;
@@ -137,7 +136,6 @@
         }
         .alert-list-btn:hover { background: #b02a37; transform: scale(1.02); }
 
-        /* Панель инструментов (изначально скрыта, появляется по настройкам) */
         .toolbar {
             position: fixed;
             top: 20px;
@@ -250,7 +248,6 @@
         .leaflet-control-attribution { display: none; }
         .leaflet-interactive-off { pointer-events: none !important; }
 
-        /* Модальное окно настроек */
         .settings-modal {
             position: fixed;
             top: 0;
@@ -318,7 +315,6 @@
             cursor: pointer;
         }
 
-        /* Адаптация под устройства */
         body.device-phone .toolbar { top: 70px; padding: 5px 10px; gap: 6px; }
         body.device-phone .tool-btn { padding: 4px 10px; font-size: 0.7rem; }
         body.device-phone .clock { top: 12px; right: 70px; padding: 4px 12px; }
@@ -339,7 +335,6 @@
 <div class="settings-gear" id="settingsGear">⚙️</div>
 <button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
-<!-- Панель инструментов (изначально скрыта, показывается если включена линейка) -->
 <div class="toolbar" id="toolbar" style="display: none;">
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
@@ -383,7 +378,7 @@
 <script>
 (function(){
     // ---------- 1. КАРТА ----------
-    const map = L.map('map', { zoomControl: false }).setView([62, 105], 3.8); // отключаем стандартный зум
+    const map = L.map('map', { zoomControl: false }).setView([62, 105], 3.8);
     const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2
     });
@@ -618,13 +613,12 @@
         updateMapAndPanel();
     }
     
-    // ---------- 8. НАСТРОЙКИ И УПРАВЛЕНИЕ УСТРОЙСТВОМ ----------
+    // ---------- 8. НАСТРОЙКИ И УСТРОЙСТВО ----------
     let isLightTheme = false;
-    let rulerEnabled = true;   // по умолчанию линейка включена, можно выключить
+    let rulerEnabled = true;
     let deviceSelectorEnabled = true;
     
     function applySettings() {
-        // Тема
         if(isLightTheme) {
             document.body.classList.add('light-theme');
             switchTileTheme(true);
@@ -632,19 +626,16 @@
             document.body.classList.remove('light-theme');
             switchTileTheme(false);
         }
-        // Линейка: показывать/скрывать панель инструментов и кнопку
         const toolbar = document.getElementById('toolbar');
         const rulerPanel = document.getElementById('rulerPanel');
         if(rulerEnabled) {
             toolbar.style.display = 'flex';
-            // если линейка была активна, оставляем панель, иначе скрываем
             if(!rulerModeActive) rulerPanel.classList.remove('show');
         } else {
             toolbar.style.display = 'none';
             rulerPanel.classList.remove('show');
-            if(rulerModeActive) setRulerMode(false); // выключаем активный режим
+            if(rulerModeActive) setRulerMode(false);
         }
-        // Кнопка смены устройства (добавляем/убираем)
         let deviceBtn = document.getElementById('deviceSwitchBtn');
         if(deviceSelectorEnabled) {
             if(!deviceBtn) {
@@ -653,7 +644,7 @@
                 newBtn.id = 'deviceSwitchBtn';
                 newBtn.className = 'tool-btn';
                 newBtn.innerHTML = '📱 Устройство';
-                newBtn.addEventListener('click', () => showDeviceModal());
+                newBtn.addEventListener('click', () => showSettingsModal());
                 tb.appendChild(newBtn);
             }
         } else {
@@ -661,12 +652,20 @@
         }
     }
     
-    function showDeviceModal() {
+    function setDeviceType(device) {
+        document.body.classList.remove('device-phone', 'device-tablet', 'device-computer');
+        if(device === 'phone') document.body.classList.add('device-phone');
+        else if(device === 'tablet') document.body.classList.add('device-tablet');
+        else document.body.classList.add('device-computer');
+        localStorage.setItem('userDevice', device);
+    }
+    
+    function showSettingsModal() {
         const modal = document.createElement('div');
         modal.className = 'settings-modal';
         modal.innerHTML = `
             <div class="settings-modal-content">
-                <h3>⚙️ Настройки интерфейса</h3>
+                <h3>⚙️ Настройки</h3>
                 <div class="setting-item">
                     <label>📏 Линейка</label>
                     <input type="checkbox" id="settingRuler" ${rulerEnabled ? 'checked' : ''}>
@@ -680,7 +679,7 @@
                     <input type="checkbox" id="settingDeviceBtn" ${deviceSelectorEnabled ? 'checked' : ''}>
                 </div>
                 <div class="device-selector">
-                    <p>Выберите размер интерфейса:</p>
+                    <p>Размер интерфейса:</p>
                     <div class="device-buttons">
                         <button data-device="phone">📱 Телефон</button>
                         <button data-device="tablet">📟 Планшет</button>
@@ -711,14 +710,6 @@
         closeBtn.addEventListener('click', () => modal.remove());
     }
     
-    function setDeviceType(device) {
-        document.body.classList.remove('device-phone', 'device-tablet', 'device-computer');
-        if(device === 'phone') document.body.classList.add('device-phone');
-        else if(device === 'tablet') document.body.classList.add('device-tablet');
-        else document.body.classList.add('device-computer');
-        localStorage.setItem('userDevice', device);
-    }
-    
     function saveSettings() {
         localStorage.setItem('rulerEnabled', rulerEnabled);
         localStorage.setItem('isLightTheme', isLightTheme);
@@ -734,8 +725,38 @@
         if(savedDeviceBtn !== null) deviceSelectorEnabled = savedDeviceBtn === 'true';
         const savedDevice = localStorage.getItem('userDevice');
         if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) setDeviceType(savedDevice);
-        else setDeviceType('computer'); // по умолчанию компьютер
+        else {
+            // При первом заходе (нет сохранённого устройства) показываем модальное окно выбора
+            showFirstDeviceModal();
+        }
         applySettings();
+    }
+    
+    function showFirstDeviceModal() {
+        const modal = document.createElement('div');
+        modal.className = 'settings-modal';
+        modal.innerHTML = `
+            <div class="settings-modal-content">
+                <h3>📱 Выберите устройство</h3>
+                <div class="device-buttons" style="flex-direction: column; gap: 12px;">
+                    <button data-device="phone" style="padding: 12px;">📱 Телефон</button>
+                    <button data-device="tablet" style="padding: 12px;">📟 Планшет</button>
+                    <button data-device="computer" style="padding: 12px;">💻 Компьютер</button>
+                </div>
+                <div class="device-note" style="margin-top: 16px; font-size: 0.7rem; opacity: 0.7; text-align: center;">Это можно изменить позже в настройках (⚙️)</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        const btns = modal.querySelectorAll('[data-device]');
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dev = btn.getAttribute('data-device');
+                setDeviceType(dev);
+                modal.remove();
+                // После выбора устройства применяем остальные настройки (тему и т.д.)
+                applySettings();
+            });
+        });
     }
     
     // ---------- 9. ЧАСЫ И АВТООБНОВЛЕНИЕ ----------
@@ -746,12 +767,11 @@
     }
     updateClock(); setInterval(updateClock, 60000);
     
-    // Инициализация
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
     // ---------- 10. ОБРАБОТЧИКИ ----------
-    document.getElementById('settingsGear').addEventListener('click', () => showDeviceModal());
+    document.getElementById('settingsGear').addEventListener('click', () => showSettingsModal());
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
@@ -765,7 +785,7 @@
     });
     window.addEventListener('resize', () => map.invalidateSize());
     
-    loadSettings(); // применить сохранённые настройки
+    loadSettings(); // загружаем настройки и при необходимости показываем выбор устройства
 })();
 </script>
 </body>
