@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Air Alert Map — Тревоги РФ</title>
+    <title>Air Alert Map — Тревоги РФ с уведомлениями</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -21,7 +21,8 @@
         body.light-theme .ruler-panel,
         body.light-theme .alerts-panel,
         body.light-theme .toolbar,
-        body.light-theme .settings-modal {
+        body.light-theme .settings-modal,
+        body.light-theme .notify-modal {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             border-color: rgba(0, 0, 0, 0.2);
@@ -242,6 +243,71 @@
         .alert-type.droneAlert { background: #dc354520; color: #ff8888; border: 1px solid #dc3545; }
         .alert-type.droneDanger { background: #ffc10720; color: #ffc107; border: 1px solid #ffc107; }
         .empty-message { color: #aaa; text-align: center; padding: 30px 20px; font-style: italic; }
+
+        /* Модальное окно уведомлений (выбор региона) */
+        .notify-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: monospace;
+        }
+        .notify-modal-content {
+            background: #1e243b;
+            border-radius: 32px;
+            padding: 24px;
+            width: 320px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.5);
+            border: 1px solid #ffc10760;
+        }
+        .notify-modal-content h3 { color: #ffc107; margin-bottom: 16px; font-size: 1.2rem; text-align: center; }
+        .region-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .region-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            padding: 6px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+        }
+        .region-check input { width: 18px; height: 18px; cursor: pointer; }
+        .region-check label { flex: 1; cursor: pointer; font-size: 0.9rem; }
+        .notify-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+        }
+        .notify-actions button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 40px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-save { background: #28a745; color: white; }
+        .btn-save:hover { background: #1e7e34; }
+        .btn-cancel { background: #dc3545; color: white; }
+        .btn-cancel:hover { background: #b02a37; }
+
         .copy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; z-index: 4000; font-family: monospace; animation: fadeOut 2s forwards; pointer-events: none; }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         .custom-popup .leaflet-popup-content-wrapper { background: #1a1f2e; color: #e8eef2; border-radius: 12px; border-left: 4px solid; }
@@ -335,7 +401,8 @@
 <div class="settings-gear" id="settingsGear">⚙️</div>
 <button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
-<div class="toolbar" id="toolbar" style="display: none;">
+<div class="toolbar" id="toolbar" style="display: flex;">
+    <button id="notifyBtn" class="tool-btn">🔔 Уведомления</button>
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
 </div>
@@ -426,7 +493,115 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
     
-    // ---------- 3. ЗАГРУЗКА alerts.json ----------
+    // ---------- 3. УВЕДОМЛЕНИЯ И ВЫБОР РЕГИОНА ----------
+    let notificationPermission = false;
+    let selectedRegions = []; // массив выбранных регионов для уведомлений
+    let lastStatusSnapshot = {}; // для отслеживания изменений
+    
+    function loadSelectedRegions() {
+        const saved = localStorage.getItem('notifyRegions');
+        if(saved) {
+            try {
+                selectedRegions = JSON.parse(saved);
+            } catch(e) { selectedRegions = []; }
+        }
+    }
+    function saveSelectedRegions() {
+        localStorage.setItem('notifyRegions', JSON.stringify(selectedRegions));
+    }
+    
+    async function requestNotificationPermission() {
+        if (!("Notification" in window)) {
+            alert("Ваш браузер не поддерживает уведомления");
+            return false;
+        }
+        if (Notification.permission === "granted") {
+            notificationPermission = true;
+            return true;
+        }
+        if (Notification.permission !== "denied") {
+            const permission = await Notification.requestPermission();
+            notificationPermission = (permission === "granted");
+            return notificationPermission;
+        }
+        return false;
+    }
+    
+    function showNotification(title, body) {
+        if (!notificationPermission) return;
+        try {
+            new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
+        } catch(e) { console.warn(e); }
+    }
+    
+    function checkAndNotify() {
+        if (!notificationPermission || selectedRegions.length === 0) return;
+        for (const region of selectedRegions) {
+            const current = regionStatus[region];
+            const previous = lastStatusSnapshot[region];
+            if (!current) continue;
+            const getLevel = (st) => {
+                if (st && st.rocket) return 4;
+                if (st && st.droneAlert) return 3;
+                if (st && st.droneDanger) return 2;
+                return 1;
+            };
+            const currentLevel = getLevel(current);
+            const previousLevel = getLevel(previous);
+            if (currentLevel > previousLevel) {
+                let title = `⚠️ Тревога в регионе ${region}`;
+                let body = "";
+                if (current.rocket) body = "🟤 РАКЕТНАЯ ОПАСНОСТЬ! Немедленно укройтесь!";
+                else if (current.droneAlert) body = "🔴 Тревога БПЛА! Работа ПВО, соблюдайте осторожность.";
+                else if (current.droneDanger) body = "🟡 Опасность БПЛА в регионе.";
+                showNotification(title, body);
+            }
+        }
+        // Сохраняем текущий снимок для следующего сравнения
+        lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
+    }
+    
+    function showRegionSelector() {
+        const modal = document.createElement('div');
+        modal.className = 'notify-modal';
+        const regionsList = allRegionNames.filter(r => !ignoredRegions.includes(r));
+        const checkboxesHtml = regionsList.map(r => `
+            <div class="region-check">
+                <input type="checkbox" value="${r}" id="chk_${r.replace(/\s/g, '_')}" ${selectedRegions.includes(r) ? 'checked' : ''}>
+                <label for="chk_${r.replace(/\s/g, '_')}">${r}</label>
+            </div>
+        `).join('');
+        modal.innerHTML = `
+            <div class="notify-modal-content">
+                <h3>🔔 Выберите регионы для уведомлений</h3>
+                <div class="region-list">${checkboxesList}</div>
+                <div class="notify-actions">
+                    <button class="btn-save" id="notifySaveBtn">Сохранить</button>
+                    <button class="btn-cancel" id="notifyCancelBtn">Отмена</button>
+                </div>
+            </div>
+        `;
+        // Исправление опечатки
+        modal.innerHTML = modal.innerHTML.replace('checkboxesList', checkboxesHtml);
+        document.body.appendChild(modal);
+        
+        const saveBtn = modal.querySelector('#notifySaveBtn');
+        const cancelBtn = modal.querySelector('#notifyCancelBtn');
+        saveBtn.addEventListener('click', () => {
+            const newSelected = [];
+            regionsList.forEach(r => {
+                const chk = modal.querySelector(`#chk_${r.replace(/\s/g, '_')}`);
+                if (chk && chk.checked) newSelected.push(r);
+            });
+            selectedRegions = newSelected;
+            saveSelectedRegions();
+            modal.remove();
+            showToast(`Выбрано ${selectedRegions.length} регионов для уведомлений`);
+        });
+        cancelBtn.addEventListener('click', () => modal.remove());
+    }
+    
+    // ---------- 4. ЗАГРУЗКА alerts.json ----------
     async function fetchAlerts() {
         try {
             const resp = await fetch("alerts.json?" + Date.now());
@@ -443,6 +618,7 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
+                checkAndNotify(); // проверяем изменения после обновления
             } else throw new Error("Неверный формат alerts.json");
         } catch (err) {
             console.error(err);
@@ -454,7 +630,7 @@
         else info.innerHTML = `📅 Последнее обновление: --:--`;
     }
     
-    // ---------- 4. ОТРИСОВКА КАРТЫ ----------
+    // ---------- 5. ОТРИСОВКА КАРТЫ ----------
     function getEffectiveStatus(region) { return regionStatus[region] || { rocket:false, droneAlert:false, droneDanger:false }; }
     function getFillColor(eff) {
         if(eff.rocket) return colors.rocket;
@@ -494,7 +670,7 @@
         panelDiv.innerHTML = active.map(r => `<div class="alert-region-item ${r.type}"><div class="region-name">${r.name}</div><div class="alert-type ${r.type}">${r.label}</div></div>`).join('');
     }
     
-    // ---------- 5. КОПИРОВАНИЕ ----------
+    // ---------- 6. КОПИРОВАНИЕ ----------
     function getCurrentDateTimeString() {
         const now = new Date();
         return `${now.getDate().toString().padStart(2,'0')}.${(now.getMonth()+1).toString().padStart(2,'0')}.${now.getFullYear()} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}`;
@@ -519,7 +695,7 @@
         document.body.appendChild(t); setTimeout(()=>t.remove(),2000);
     }
     
-    // ---------- 6. ЛИНЕЙКА ----------
+    // ---------- 7. ЛИНЕЙКА ----------
     let rulerModeActive = false;
     let points = [], lineLayer=null, markersLayer=null;
     const speeds = { drone:180, jet_drone:450, cruise:850, ballistic:9000 };
@@ -584,7 +760,7 @@
         }
     }
     
-    // ---------- 7. ГРАНИЦЫ ----------
+    // ---------- 8. ГРАНИЦЫ ----------
     function loadPolygons() {
         const url = "https://raw.githubusercontent.com/azatkh/ru-regions-geojson/main/regions.geojson";
         const fallback = "https://raw.githubusercontent.com/codeforgermany/click_that_hood/main/public/data/russia.geojson";
@@ -613,7 +789,7 @@
         updateMapAndPanel();
     }
     
-    // ---------- 8. НАСТРОЙКИ И УСТРОЙСТВО ----------
+    // ---------- 9. НАСТРОЙКИ (шестерёнка) ----------
     let isLightTheme = false;
     let rulerEnabled = true;
     let deviceSelectorEnabled = true;
@@ -726,7 +902,6 @@
         const savedDevice = localStorage.getItem('userDevice');
         if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) setDeviceType(savedDevice);
         else {
-            // При первом заходе (нет сохранённого устройства) показываем модальное окно выбора
             showFirstDeviceModal();
         }
         applySettings();
@@ -753,13 +928,12 @@
                 const dev = btn.getAttribute('data-device');
                 setDeviceType(dev);
                 modal.remove();
-                // После выбора устройства применяем остальные настройки (тему и т.д.)
                 applySettings();
             });
         });
     }
     
-    // ---------- 9. ЧАСЫ И АВТООБНОВЛЕНИЕ ----------
+    // ---------- 10. ЧАСЫ И АВТООБНОВЛЕНИЕ ----------
     function updateClock() {
         const now = new Date();
         document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', { hour:'2-digit', minute:'2-digit' });
@@ -770,11 +944,28 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
-    // ---------- 10. ОБРАБОТЧИКИ ----------
+    // Инициализация уведомлений и выбора региона
+    loadSelectedRegions();
+    // Делаем снимок начального состояния для уведомлений
+    setInterval(() => {
+        if (Object.keys(regionStatus).length > 0) {
+            lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
+        }
+    }, 5000); // подождём первой загрузки
+    
+    // ---------- 11. ОБРАБОТЧИКИ ----------
     document.getElementById('settingsGear').addEventListener('click', () => showSettingsModal());
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
+    document.getElementById('notifyBtn').addEventListener('click', async () => {
+        const granted = await requestNotificationPermission();
+        if (granted) {
+            showRegionSelector();
+        } else {
+            alert("Разрешите уведомления в настройках браузера, чтобы получать оповещения о тревогах.");
+        }
+    });
     const panel = document.getElementById('alertsPanel');
     document.getElementById('openPanelBtn').addEventListener('click', () => { panel.classList.add('open'); updateAlertsPanel(); });
     document.getElementById('closePanelBtn').addEventListener('click', () => panel.classList.remove('open'));
@@ -785,7 +976,7 @@
     });
     window.addEventListener('resize', () => map.invalidateSize());
     
-    loadSettings(); // загружаем настройки и при необходимости показываем выбор устройства
+    loadSettings();
 })();
 </script>
 </body>
