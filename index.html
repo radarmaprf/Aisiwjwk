@@ -13,7 +13,6 @@
             overflow: hidden;
             transition: background 0.3s ease, color 0.2s ease;
         }
-
         /* ========== СВЕТЛАЯ ТЕМА ========== */
         body.light-theme { background: #eef2f5; }
         body.light-theme .clock,
@@ -22,8 +21,7 @@
         body.light-theme .ruler-panel,
         body.light-theme .alerts-panel,
         body.light-theme .toolbar,
-        body.light-theme .status,
-        body.light-theme .device-modal {
+        body.light-theme .settings-modal {
             background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             border-color: rgba(0, 0, 0, 0.2);
@@ -32,15 +30,13 @@
         body.light-theme .time-main { background: linear-gradient(135deg, #333, #666); -webkit-background-clip: text; background-clip: text; color: transparent; }
         body.light-theme .tool-btn { background: rgba(0, 0, 0, 0.1); color: #111; }
         body.light-theme .alert-region-item { background: rgba(0, 0, 0, 0.05); }
-        body.light-theme .status { color: #1e3a5f; border-color: #ffc107; background: rgba(255,255,200,0.9); }
-        body.light-theme .stats-badge, body.light-theme .panel-header h3 { color: #b13b00; }
         body.light-theme .region-name { color: #111; }
-
+        body.light-theme .legend { color: #1a1e2c; }
         /* ========== ОБЩИЕ СТИЛИ ========== */
         .clock {
             position: fixed;
             top: 20px;
-            right: 20px;
+            right: 80px; /* смещаем, чтобы не перекрывало шестерёнку */
             z-index: 2000;
             background: rgba(10,14,26,0.85);
             backdrop-filter: blur(8px);
@@ -61,6 +57,28 @@
             color: transparent;
         }
         .date { font-size: 0.65rem; opacity: 0.7; margin-top: 4px; text-transform: uppercase; }
+
+        /* Шестерёнка (настройки) */
+        .settings-gear {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: rgba(10,14,26,0.85);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.6rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.2s;
+            color: #ffd966;
+        }
+        .settings-gear:hover { background: #28a745; transform: rotate(30deg); color: white; }
 
         .legend {
             position: fixed;
@@ -91,33 +109,12 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 40px;
-            padding: 8px 20px;
+            padding: 6px 16px;
             color: #ccc;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-family: monospace;
             text-align: center;
             pointer-events: none;
-        }
-
-        .status {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 40px;
-            padding: 8px 24px;
-            color: #ffd966;
-            font-size: 0.85rem;
-            font-weight: bold;
-            font-family: monospace;
-            white-space: nowrap;
-            text-align: center;
-            border: 1px solid rgba(255,215,0,0.5);
-            pointer-events: none;
-            transition: all 0.2s;
         }
 
         .alert-list-btn {
@@ -140,6 +137,7 @@
         }
         .alert-list-btn:hover { background: #b02a37; transform: scale(1.02); }
 
+        /* Панель инструментов (изначально скрыта, появляется по настройкам) */
         .toolbar {
             position: fixed;
             top: 20px;
@@ -229,9 +227,8 @@
             align-items: center;
             background: rgba(0,0,0,0.5);
         }
-        .panel-header h3 { color: #ffc107; font-size: 1.2rem; margin: 0; display: flex; gap: 8px; align-items: center; }
-        .stats-badge { background: rgba(0,0,0,0.6); border-radius: 40px; padding: 4px 12px; font-size: 0.7rem; color: #ffd966; margin-left: 8px; }
-        .panel-actions { display: flex; gap: 12px; align-items: center; }
+        .panel-header h3 { color: #ffc107; font-size: 1.2rem; margin: 0; }
+        .panel-actions { display: flex; gap: 12px; }
         .copy-btn { background: rgba(255,255,255,0.15); border: none; color: white; font-size: 1.1rem; cursor: pointer; padding: 4px 10px; border-radius: 20px; transition: 0.2s; font-family: monospace; }
         .copy-btn:hover { background: #28a745; }
         .close-panel { background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1; }
@@ -250,11 +247,11 @@
         .copy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 6px 16px; border-radius: 30px; font-size: 0.85rem; z-index: 4000; font-family: monospace; animation: fadeOut 2s forwards; pointer-events: none; }
         @keyframes fadeOut { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
         .custom-popup .leaflet-popup-content-wrapper { background: #1a1f2e; color: #e8eef2; border-radius: 12px; border-left: 4px solid; }
-        .leaflet-control-attribution { display: none !important; }
+        .leaflet-control-attribution { display: none; }
         .leaflet-interactive-off { pointer-events: none !important; }
 
-        /* ========== МОДАЛЬНОЕ ОКНО ВЫБОРА УСТРОЙСТВА ========== */
-        .device-modal {
+        /* Модальное окно настроек */
+        .settings-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -268,69 +265,84 @@
             justify-content: center;
             font-family: monospace;
         }
-        .device-modal-content {
+        .settings-modal-content {
             background: #1e243b;
             border-radius: 32px;
             padding: 28px 24px;
-            width: 280px;
-            text-align: center;
+            width: 300px;
             box-shadow: 0 20px 35px rgba(0,0,0,0.5);
             border: 1px solid #ffc10760;
         }
-        .device-modal-content h3 { color: #ffc107; margin-bottom: 20px; font-size: 1.4rem; }
-        .device-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .device-btn {
-            background: #2a2f44;
-            border: none;
-            padding: 12px;
-            border-radius: 60px;
-            color: white;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+        .settings-modal-content h3 { color: #ffc107; margin-bottom: 20px; font-size: 1.4rem; text-align: center; }
+        .setting-item {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            color: white;
+            font-size: 1rem;
         }
-        .device-btn:hover { background: #28a745; transform: scale(1.02); }
-        .device-note { font-size: 0.7rem; opacity: 0.7; margin-top: 15px; }
+        .setting-item label { cursor: pointer; }
+        .setting-item input { width: 20px; height: 20px; cursor: pointer; }
+        .device-selector {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+        .device-selector p { color: #ffc107; margin-bottom: 10px; font-size: 0.9rem; }
+        .device-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+        .device-buttons button {
+            background: #2a2f44;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            flex: 1;
+            transition: 0.2s;
+        }
+        .device-buttons button:hover { background: #28a745; }
+        .close-settings {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #dc3545;
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-        /* ========== АДАПТАЦИЯ ПОД УСТРОЙСТВА (классы на body) ========== */
-        /* Телефон */
+        /* Адаптация под устройства */
         body.device-phone .toolbar { top: 70px; padding: 5px 10px; gap: 6px; }
         body.device-phone .tool-btn { padding: 4px 10px; font-size: 0.7rem; }
-        body.device-phone .clock { top: 12px; right: 12px; padding: 4px 12px; }
+        body.device-phone .clock { top: 12px; right: 70px; padding: 4px 12px; }
+        body.device-phone .settings-gear { top: 12px; right: 12px; width: 38px; height: 38px; font-size: 1.3rem; }
         body.device-phone .time-main { font-size: 1.2rem; }
         body.device-phone .alerts-panel { width: 85%; left: -85%; }
         body.device-phone .ruler-panel { width: 220px; top: 110px; left: 10px; }
         body.device-phone .legend { bottom: 10px; left: 10px; padding: 6px 10px; font-size: 0.65rem; }
         body.device-phone .update-info { bottom: 10px; right: 10px; padding: 4px 12px; font-size: 0.7rem; }
-        body.device-phone .status { font-size: 0.65rem; padding: 4px 12px; white-space: nowrap; bottom: 10px; }
         body.device-phone .alert-list-btn { top: 10px; left: 10px; padding: 5px 12px; font-size: 0.75rem; }
-        /* Планшет */
         body.device-tablet .toolbar { top: 20px; padding: 6px 14px; }
         body.device-tablet .tool-btn { padding: 5px 14px; font-size: 0.8rem; }
         body.device-tablet .ruler-panel { width: 250px; top: 85px; }
-        body.device-tablet .status { font-size: 0.75rem; padding: 6px 18px; }
-        /* Компьютер — базовые стили, ничего менять не нужно */
     </style>
 </head>
 <body>
 <div class="clock"><div class="time-main" id="liveTime">--:--</div><div class="date" id="liveDate">--</div></div>
+<div class="settings-gear" id="settingsGear">⚙️</div>
 <button class="alert-list-btn" id="openPanelBtn">⚠️ Список тревог</button>
 
-<div class="toolbar">
+<!-- Панель инструментов (изначально скрыта, показывается если включена линейка) -->
+<div class="toolbar" id="toolbar" style="display: none;">
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
-    <button id="themeBtn" class="tool-btn">🌙 Тема</button>
-    <button id="deviceSwitchBtn" class="tool-btn">📱 Устройство</button>
 </div>
 
 <div class="legend">
@@ -341,7 +353,6 @@
 </div>
 
 <div class="update-info" id="lastUpdateInfo">📅 Последнее обновление: --:--</div>
-<div class="status" id="status">Загрузка карты...</div>
 
 <div id="rulerPanel" class="ruler-panel">
     <h4>📏 Измерение угрозы</h4>
@@ -362,7 +373,7 @@
 <div id="map" style="width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;"></div>
 <div id="alertsPanel" class="alerts-panel">
     <div class="panel-header">
-        <h3>🚨 Регионы с тревогами <span id="panelStats" class="stats-badge">—</span></h3>
+        <h3>🚨 Регионы с тревогами</h3>
         <div class="panel-actions"><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div>
     </div>
     <div class="panel-content" id="panelContent"><div class="empty-message">Нет активных тревог</div></div>
@@ -372,7 +383,7 @@
 <script>
 (function(){
     // ---------- 1. КАРТА ----------
-    const map = L.map('map').setView([62, 105], 3.8);
+    const map = L.map('map', { zoomControl: false }).setView([62, 105], 3.8); // отключаем стандартный зум
     const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '', subdomains: 'abcd', maxZoom: 10, minZoom: 2
     });
@@ -420,24 +431,6 @@
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
     
-    // Статистика
-    function getStats() {
-        let rocket=0, droneAlert=0, droneDanger=0;
-        for(const st of Object.values(regionStatus)) {
-            if(st.rocket) rocket++;
-            else if(st.droneAlert) droneAlert++;
-            else if(st.droneDanger) droneDanger++;
-        }
-        return { rocket, droneAlert, droneDanger, total: rocket+droneAlert+droneDanger };
-    }
-    
-    function updateStatusBar() {
-        const s = getStats();
-        const statusDiv = document.getElementById('status');
-        if(statusDiv) statusDiv.innerHTML = `🟤 Ракет: ${s.rocket} &nbsp; 🔴 Тревог БПЛА: ${s.droneAlert} &nbsp; 🟡 Опасн. БПЛА: ${s.droneDanger} &nbsp; | Всего: ${s.total}`;
-        document.getElementById('panelStats').innerText = `📊 ${s.total} тревог`;
-    }
-    
     // ---------- 3. ЗАГРУЗКА alerts.json ----------
     async function fetchAlerts() {
         try {
@@ -455,11 +448,9 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
-                updateStatusBar();
             } else throw new Error("Неверный формат alerts.json");
         } catch (err) {
             console.error(err);
-            document.getElementById('status').innerHTML = `⚠️ Ошибка: ${err.message}`;
         }
     }
     function updateLastUpdateInfo() {
@@ -493,7 +484,6 @@
             layer.getPopup()?.setContent(getPopupContent(norm, eff));
         });
         updateAlertsPanel();
-        updateStatusBar();
     }
     function updateAlertsPanel() {
         const panelDiv = document.getElementById('panelContent');
@@ -584,12 +574,14 @@
         const btn = document.getElementById('rulerBtn');
         const panel = document.getElementById('rulerPanel');
         if(active) {
-            btn.classList.add('active'); panel.classList.add('show');
+            btn.classList.add('active');
+            panel.classList.add('show');
             map.getContainer().style.cursor = 'crosshair';
             if(polygonsLayer) polygonsLayer.eachLayer(layer => { if(layer._path) layer._path.classList.add('leaflet-interactive-off'); });
             map.on('click', addRulerPoint);
         } else {
-            btn.classList.remove('active'); panel.classList.remove('show');
+            btn.classList.remove('active');
+            panel.classList.remove('show');
             map.getContainer().style.cursor = '';
             if(polygonsLayer) polygonsLayer.eachLayer(layer => { if(layer._path) layer._path.classList.remove('leaflet-interactive-off'); });
             map.off('click', addRulerPoint);
@@ -623,13 +615,103 @@
             }
         }).addTo(map);
         try { map.fitBounds(polygonsLayer.getBounds()); } catch(e) { map.setView([62,105],3.8); }
-        document.getElementById('status').innerHTML = 'Границы загружены';
         updateMapAndPanel();
     }
     
-    // ---------- 8. УПРАВЛЕНИЕ УСТРОЙСТВОМ ----------
+    // ---------- 8. НАСТРОЙКИ И УПРАВЛЕНИЕ УСТРОЙСТВОМ ----------
+    let isLightTheme = false;
+    let rulerEnabled = true;   // по умолчанию линейка включена, можно выключить
+    let deviceSelectorEnabled = true;
+    
+    function applySettings() {
+        // Тема
+        if(isLightTheme) {
+            document.body.classList.add('light-theme');
+            switchTileTheme(true);
+        } else {
+            document.body.classList.remove('light-theme');
+            switchTileTheme(false);
+        }
+        // Линейка: показывать/скрывать панель инструментов и кнопку
+        const toolbar = document.getElementById('toolbar');
+        const rulerPanel = document.getElementById('rulerPanel');
+        if(rulerEnabled) {
+            toolbar.style.display = 'flex';
+            // если линейка была активна, оставляем панель, иначе скрываем
+            if(!rulerModeActive) rulerPanel.classList.remove('show');
+        } else {
+            toolbar.style.display = 'none';
+            rulerPanel.classList.remove('show');
+            if(rulerModeActive) setRulerMode(false); // выключаем активный режим
+        }
+        // Кнопка смены устройства (добавляем/убираем)
+        let deviceBtn = document.getElementById('deviceSwitchBtn');
+        if(deviceSelectorEnabled) {
+            if(!deviceBtn) {
+                const tb = document.getElementById('toolbar');
+                const newBtn = document.createElement('button');
+                newBtn.id = 'deviceSwitchBtn';
+                newBtn.className = 'tool-btn';
+                newBtn.innerHTML = '📱 Устройство';
+                newBtn.addEventListener('click', () => showDeviceModal());
+                tb.appendChild(newBtn);
+            }
+        } else {
+            if(deviceBtn) deviceBtn.remove();
+        }
+    }
+    
+    function showDeviceModal() {
+        const modal = document.createElement('div');
+        modal.className = 'settings-modal';
+        modal.innerHTML = `
+            <div class="settings-modal-content">
+                <h3>⚙️ Настройки интерфейса</h3>
+                <div class="setting-item">
+                    <label>📏 Линейка</label>
+                    <input type="checkbox" id="settingRuler" ${rulerEnabled ? 'checked' : ''}>
+                </div>
+                <div class="setting-item">
+                    <label>🌙 Тёмная тема</label>
+                    <input type="checkbox" id="settingTheme" ${isLightTheme ? '' : 'checked'}>
+                </div>
+                <div class="setting-item">
+                    <label>📱 Кнопка смены устройства</label>
+                    <input type="checkbox" id="settingDeviceBtn" ${deviceSelectorEnabled ? 'checked' : ''}>
+                </div>
+                <div class="device-selector">
+                    <p>Выберите размер интерфейса:</p>
+                    <div class="device-buttons">
+                        <button data-device="phone">📱 Телефон</button>
+                        <button data-device="tablet">📟 Планшет</button>
+                        <button data-device="computer">💻 Компьютер</button>
+                    </div>
+                </div>
+                <button class="close-settings" id="closeSettingsBtn">Закрыть</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        const chkRuler = modal.querySelector('#settingRuler');
+        const chkTheme = modal.querySelector('#settingTheme');
+        const chkDeviceBtn = modal.querySelector('#settingDeviceBtn');
+        const deviceBtns = modal.querySelectorAll('[data-device]');
+        const closeBtn = modal.querySelector('#closeSettingsBtn');
+        
+        chkRuler.addEventListener('change', (e) => { rulerEnabled = e.target.checked; applySettings(); saveSettings(); });
+        chkTheme.addEventListener('change', (e) => { isLightTheme = !e.target.checked; applySettings(); saveSettings(); });
+        chkDeviceBtn.addEventListener('change', (e) => { deviceSelectorEnabled = e.target.checked; applySettings(); saveSettings(); });
+        deviceBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dev = btn.getAttribute('data-device');
+                setDeviceType(dev);
+                modal.remove();
+            });
+        });
+        closeBtn.addEventListener('click', () => modal.remove());
+    }
+    
     function setDeviceType(device) {
-        // device: 'phone', 'tablet', 'computer'
         document.body.classList.remove('device-phone', 'device-tablet', 'device-computer');
         if(device === 'phone') document.body.classList.add('device-phone');
         else if(device === 'tablet') document.body.classList.add('device-tablet');
@@ -637,33 +719,26 @@
         localStorage.setItem('userDevice', device);
     }
     
-    function showDeviceModal(callback) {
-        const modal = document.createElement('div');
-        modal.className = 'device-modal';
-        modal.innerHTML = `
-            <div class="device-modal-content">
-                <h3>📱 Выберите устройство</h3>
-                <div class="device-options">
-                    <button class="device-btn" data-device="phone">📱 Телефон</button>
-                    <button class="device-btn" data-device="tablet">📟 Планшет</button>
-                    <button class="device-btn" data-device="computer">💻 Компьютер</button>
-                </div>
-                <div class="device-note">Это настройка интерфейса (размеры кнопок, панелей)</div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        const btns = modal.querySelectorAll('.device-btn');
-        btns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const dev = btn.getAttribute('data-device');
-                setDeviceType(dev);
-                modal.remove();
-                if(callback) callback(dev);
-            });
-        });
+    function saveSettings() {
+        localStorage.setItem('rulerEnabled', rulerEnabled);
+        localStorage.setItem('isLightTheme', isLightTheme);
+        localStorage.setItem('deviceSelectorEnabled', deviceSelectorEnabled);
     }
     
-    // ---------- 9. ЧАСЫ, ТЕМА, АВТООБНОВЛЕНИЕ ----------
+    function loadSettings() {
+        const savedRuler = localStorage.getItem('rulerEnabled');
+        if(savedRuler !== null) rulerEnabled = savedRuler === 'true';
+        const savedTheme = localStorage.getItem('isLightTheme');
+        if(savedTheme !== null) isLightTheme = savedTheme === 'true';
+        const savedDeviceBtn = localStorage.getItem('deviceSelectorEnabled');
+        if(savedDeviceBtn !== null) deviceSelectorEnabled = savedDeviceBtn === 'true';
+        const savedDevice = localStorage.getItem('userDevice');
+        if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) setDeviceType(savedDevice);
+        else setDeviceType('computer'); // по умолчанию компьютер
+        applySettings();
+    }
+    
+    // ---------- 9. ЧАСЫ И АВТООБНОВЛЕНИЕ ----------
     function updateClock() {
         const now = new Date();
         document.getElementById('liveTime').innerHTML = now.toLocaleTimeString('ru', { hour:'2-digit', minute:'2-digit' });
@@ -671,33 +746,12 @@
     }
     updateClock(); setInterval(updateClock, 60000);
     
-    let isLightTheme = false;
-    const themeBtn = document.getElementById('themeBtn');
-    themeBtn.addEventListener('click', () => {
-        isLightTheme = !isLightTheme;
-        document.body.classList.toggle('light-theme', isLightTheme);
-        themeBtn.innerHTML = isLightTheme ? '☀️ Тема' : '🌙 Тема';
-        switchTileTheme(isLightTheme);
-    });
-    
-    // Определение устройства при первом входе или если нет сохранённого выбора
-    const savedDevice = localStorage.getItem('userDevice');
-    if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) {
-        setDeviceType(savedDevice);
-    } else {
-        // Показываем модальное окно при первом заходе
-        showDeviceModal();
-    }
-    
-    // Кнопка смены устройства в панели
-    document.getElementById('deviceSwitchBtn').addEventListener('click', () => {
-        showDeviceModal();
-    });
-    
+    // Инициализация
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
     // ---------- 10. ОБРАБОТЧИКИ ----------
+    document.getElementById('settingsGear').addEventListener('click', () => showDeviceModal());
     document.getElementById('rulerBtn').addEventListener('click', () => setRulerMode(!rulerModeActive));
     document.getElementById('clearRulerBtn').addEventListener('click', clearRuler);
     document.getElementById('threatType').addEventListener('change', updateRulerDisplay);
@@ -710,6 +764,8 @@
             panel.classList.remove('open');
     });
     window.addEventListener('resize', () => map.invalidateSize());
+    
+    loadSettings(); // применить сохранённые настройки
 })();
 </script>
 </body>
