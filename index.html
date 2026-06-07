@@ -14,7 +14,7 @@
             overflow: hidden;
             transition: background 0.3s ease;
         }
-        /* Светлая тема */
+        /* ========== СВЕТЛАЯ ТЕМА ========== */
         body.light-theme { background: #eef2f5; }
         body.light-theme .clock,
         body.light-theme .legend,
@@ -29,7 +29,7 @@
             border-color: rgba(0, 0, 0, 0.2);
             color: #1a1e2c;
         }
-        body.light-theme .time-main { background: linear-gradient(135deg, #333, #666); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        body.light-theme .time-main { background: linear-gradient(135deg, #222, #555); -webkit-background-clip: text; background-clip: text; color: transparent; }
         body.light-theme .tool-btn { background: rgba(0, 0, 0, 0.1); color: #111; }
         body.light-theme .alert-region-item { background: rgba(0, 0, 0, 0.05); }
         body.light-theme .region-name { color: #111; }
@@ -38,11 +38,25 @@
         body.light-theme .forecast-panel h4 { color: #b13b00; }
         body.light-theme .forecast-item { border-bottom-color: rgba(0, 0, 0, 0.1); color: #1a1e2c; }
         body.light-theme .forecast-empty { color: #555; }
+        body.light-theme .distance-info { color: #222; background: rgba(0,0,0,0.05); }
+        body.light-theme .time-result { color: #b13b00; }
         
-        /* Базовые стили */
+        /* ========== ТЁМНАЯ ТЕМА (базовая) ========== */
+        .clock, .legend, .update-info, .ruler-panel, .forecast-panel, .alerts-panel, .toolbar, .settings-modal {
+            background: rgba(10,14,26,0.95);
+            backdrop-filter: blur(12px);
+            color: #e8eef2;
+        }
+        .forecast-panel { color: #e8eef2; }
+        .forecast-panel h4 { color: #ffc107; }
+        .forecast-item { border-bottom-color: rgba(255,255,255,0.1); color: #e8eef2; }
+        .forecast-empty { color: #aaa; }
+        .distance-info { color: #ddd; background: #00000055; }
+        .time-result { color: #ffc107; }
+        
+        /* Общие стили */
         .clock {
             position: fixed; top: 20px; right: 80px; z-index: 2000;
-            background: rgba(10,14,26,0.85); backdrop-filter: blur(8px);
             border-radius: 20px; padding: 8px 18px;
             font-family: monospace; text-align: center; border: 1px solid rgba(255,255,255,0.15);
         }
@@ -61,7 +75,6 @@
 
         .legend {
             position: fixed; bottom: 20px; left: 20px; z-index: 2000;
-            background: rgba(10,14,26,0.85); backdrop-filter: blur(8px);
             border-radius: 12px; padding: 10px 16px; font-size: 0.75rem;
             border: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; gap: 6px;
             pointer-events: none;
@@ -71,9 +84,8 @@
 
         .update-info {
             position: fixed; bottom: 20px; right: 20px; z-index: 2000;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
             border: 1px solid rgba(255,255,255,0.2); border-radius: 40px;
-            padding: 6px 16px; color: #ccc; font-size: 0.75rem;
+            padding: 6px 16px; font-size: 0.75rem;
             pointer-events: none;
         }
 
@@ -89,7 +101,7 @@
         .toolbar {
             position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
             z-index: 2000; display: flex; gap: 12px;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
             padding: 8px 16px; border-radius: 40px;
             border: 1px solid rgba(255,255,255,0.2);
         }
@@ -105,7 +117,6 @@
 
         .ruler-panel {
             position: fixed; top: 80px; left: 20px; z-index: 2100;
-            background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
             border-radius: 16px; padding: 12px 18px; width: 260px;
             border: 1px solid rgba(255,255,255,0.2); display: none;
             flex-direction: column; gap: 10px;
@@ -113,23 +124,22 @@
         .ruler-panel.show { display: flex; }
         .ruler-panel h4 { margin: 0 0 5px 0; color: #ffc107; }
         .threat-select { background: #1a1f2e; color: white; border: 1px solid #555; padding: 6px; border-radius: 8px; }
-        .distance-info { background: #00000055; padding: 8px; border-radius: 8px; margin-top: 5px; color: #eee; }
-        .time-result { font-size: 1.1rem; font-weight: bold; color: #ffc107; text-align: center; }
+        .distance-info { padding: 8px; border-radius: 8px; margin-top: 5px; }
+        .distance-info p { margin: 4px 0; font-size: 0.75rem; }
+        .time-result { font-size: 1.1rem; font-weight: bold; text-align: center; }
 
         .forecast-panel {
             position: fixed; top: 80px; right: 20px; z-index: 2100;
-            background: rgba(10,14,26,0.95); backdrop-filter: blur(12px);
             border-radius: 16px; padding: 12px 18px;
             width: 260px; border: 1px solid rgba(255,215,0,0.5);
             display: none;
             flex-direction: column; gap: 10px;
             pointer-events: none;
-            color: #e8eef2;
         }
-        .forecast-panel h4 { margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 6px; color: #ffc107; }
+        .forecast-panel h4 { margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
         .forecast-list { max-height: 200px; overflow-y: auto; font-size: 0.8rem; }
-        .forecast-item { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .forecast-empty { font-style: italic; font-size: 0.75rem; text-align: center; padding: 10px; color: #aaa; }
+        .forecast-item { padding: 6px 0; border-bottom: 1px solid; }
+        .forecast-empty { font-style: italic; font-size: 0.75rem; text-align: center; padding: 10px; }
 
         .alerts-panel {
             position: fixed; top: 0; left: -320px; width: 300px; height: 100%;
@@ -204,34 +214,27 @@
             color: white; font-weight: bold; cursor: pointer;
         }
 
-        /* ========== АДАПТАЦИЯ ПОД ТЕЛЕФОН (БЕЗ КЛАССА, ПО МЕДИА-ЗАПРОСУ) ========== */
-        @media (max-width: 600px) {
-            .clock { top: 12px; right: 60px; padding: 4px 10px; }
-            .time-main { font-size: 1.2rem; }
-            .settings-gear { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 1.2rem; }
-            .alert-list-btn { top: 12px; left: 12px; padding: 4px 10px; font-size: 0.7rem; }
-            
-            /* Панель инструментов — сильно уменьшаем */
-            .toolbar { top: 60px; padding: 4px 8px; gap: 6px; }
-            .tool-btn { padding: 4px 8px; font-size: 0.65rem; gap: 3px; }
-            
-            /* Панели */
-            .ruler-panel, .forecast-panel { width: 220px; top: 95px; }
-            .ruler-panel { left: 8px; }
-            .forecast-panel { right: 8px; }
-            
-            .legend { bottom: 8px; left: 8px; padding: 6px 10px; font-size: 0.6rem; }
-            .update-info { bottom: 8px; right: 8px; padding: 4px 10px; font-size: 0.65rem; }
-            
-            .alerts-panel { width: 85%; left: -85%; }
-        }
+        /* ========== АДАПТАЦИЯ ПОД УСТРОЙСТВА (классы) ========== */
+        body.device-phone .toolbar { top: 70px; padding: 4px 8px; gap: 6px; }
+        body.device-phone .tool-btn { padding: 4px 8px; font-size: 0.65rem; gap: 3px; }
+        body.device-phone .clock { top: 12px; right: 60px; padding: 4px 10px; }
+        body.device-phone .time-main { font-size: 1.2rem; }
+        body.device-phone .settings-gear { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 1.2rem; }
+        body.device-phone .alert-list-btn { top: 12px; left: 12px; padding: 4px 10px; font-size: 0.7rem; }
+        body.device-phone .ruler-panel, body.device-phone .forecast-panel { width: 220px; top: 95px; }
+        body.device-phone .ruler-panel { left: 8px; }
+        body.device-phone .forecast-panel { right: 8px; }
+        body.device-phone .legend { bottom: 8px; left: 8px; padding: 6px 10px; font-size: 0.6rem; }
+        body.device-phone .update-info { bottom: 8px; right: 8px; padding: 4px 10px; font-size: 0.65rem; }
+        body.device-phone .alerts-panel { width: 85%; left: -85%; }
         
-        /* Планшеты */
-        @media (min-width: 601px) and (max-width: 900px) {
-            .toolbar { top: 20px; padding: 6px 12px; gap: 8px; }
-            .tool-btn { padding: 5px 12px; font-size: 0.75rem; }
-            .ruler-panel, .forecast-panel { width: 240px; top: 85px; }
-        }
+        body.device-tablet .toolbar { top: 20px; padding: 6px 12px; gap: 8px; }
+        body.device-tablet .tool-btn { padding: 5px 12px; font-size: 0.75rem; }
+        body.device-tablet .ruler-panel, body.device-tablet .forecast-panel { width: 240px; top: 85px; }
+        
+        body.device-computer .toolbar { top: 20px; padding: 8px 16px; gap: 12px; }
+        body.device-computer .tool-btn { padding: 6px 16px; font-size: 0.85rem; }
+        body.device-computer .ruler-panel, body.device-computer .forecast-panel { width: 260px; top: 80px; }
     </style>
 </head>
 <body>
@@ -650,6 +653,18 @@
         document.getElementById('forecastPanel').style.display = forecastPanelVisible ? 'flex' : 'none';
     }
     
+    function setDeviceType(device) {
+        // Удаляем существующие классы
+        document.body.classList.remove('device-phone', 'device-tablet', 'device-computer');
+        if (device === 'phone') document.body.classList.add('device-phone');
+        else if (device === 'tablet') document.body.classList.add('device-tablet');
+        else if (device === 'computer') document.body.classList.add('device-computer');
+        localStorage.setItem('userDevice', device);
+        // Принудительно применить размеры (вызов applySettings не нужен, классы уже навешены)
+        // Но пересчитаем панели, если нужно
+        map.invalidateSize();
+    }
+    
     function showSettingsModal() {
         const modal = document.createElement('div');
         modal.className = 'settings-modal';
@@ -671,18 +686,19 @@
         const chkDeviceBtn = modal.querySelector('#settingDeviceBtn');
         const deviceBtns = modal.querySelectorAll('[data-device]');
         const closeBtn = modal.querySelector('#closeSettingsBtn');
+        
         chkRuler.addEventListener('change', (e) => { rulerEnabled = e.target.checked; applySettings(); saveSettings(); });
         chkForecast.addEventListener('change', (e) => { forecastEnabled = e.target.checked; if (!forecastEnabled) forecastPanelVisible = false; applySettings(); saveSettings(); });
         chkTheme.addEventListener('change', (e) => { isLightTheme = !e.target.checked; applySettings(); saveSettings(); });
         chkDeviceBtn.addEventListener('change', (e) => { deviceSelectorEnabled = e.target.checked; applySettings(); saveSettings(); });
-        deviceBtns.forEach(btn => { btn.addEventListener('click', () => { setDeviceType(btn.getAttribute('data-device')); modal.remove(); }); });
+        deviceBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const dev = btn.getAttribute('data-device');
+                setDeviceType(dev);
+                modal.remove();
+            });
+        });
         closeBtn.addEventListener('click', () => modal.remove());
-    }
-    
-    function setDeviceType(device) {
-        // для ручного выбора оставляем только классы, но медиа-запросы уже работают, дополнительно не нужно
-        // просто сохраняем в localStorage для информации
-        localStorage.setItem('userDevice', device);
     }
     
     function saveSettings() {
@@ -701,6 +717,16 @@
         if(savedTheme !== null) isLightTheme = savedTheme === 'true';
         const savedDeviceBtn = localStorage.getItem('deviceSelectorEnabled');
         if(savedDeviceBtn !== null) deviceSelectorEnabled = savedDeviceBtn === 'true';
+        const savedDevice = localStorage.getItem('userDevice');
+        if(savedDevice && ['phone','tablet','computer'].includes(savedDevice)) {
+            setDeviceType(savedDevice);
+        } else {
+            // Автоопределение по ширине экрана
+            const width = window.innerWidth;
+            if (width < 600) setDeviceType('phone');
+            else if (width < 900) setDeviceType('tablet');
+            else setDeviceType('computer');
+        }
         forecastPanelVisible = false;
         applySettings();
     }
