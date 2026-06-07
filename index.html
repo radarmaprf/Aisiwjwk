@@ -350,12 +350,13 @@
     let notificationPermission = false;
     let selectedRegions = [];
     let lastStatusSnapshot = {};
+    let isFirstLoad = true;
     
     function loadSelectedRegions() {
         const saved = localStorage.getItem('notifyRegions');
-        if(saved) try { selectedRegions = JSON.parse(saved); } catch(e) { selectedRegions = []; }
+        if(saved) try { selectedRegions = JSON.parse(saved); console.log("Загружены выбранные регионы:", selectedRegions); } catch(e) { selectedRegions = []; }
     }
-    function saveSelectedRegions() { localStorage.setItem('notifyRegions', JSON.stringify(selectedRegions)); }
+    function saveSelectedRegions() { localStorage.setItem('notifyRegions', JSON.stringify(selectedRegions)); console.log("Сохранены регионы:", selectedRegions); }
     
     async function requestNotificationPermission() {
         if (!("Notification" in window)) { alert("Ваш браузер не поддерживает уведомления"); return false; }
@@ -370,11 +371,17 @@
     
     function showNotification(title, body) {
         if (!notificationPermission) return;
-        try { new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" }); } catch(e) {}
+        try { 
+            new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png" });
+            console.log("Уведомление отправлено:", title);
+        } catch(e) { console.warn(e); }
     }
     
     function checkAndNotify() {
-        if (!notificationPermission || selectedRegions.length === 0) return;
+        if (!notificationPermission || selectedRegions.length === 0) {
+            console.log("Уведомления не активны: permission=", notificationPermission, "selectedRegions.length=", selectedRegions.length);
+            return;
+        }
         for (const region of selectedRegions) {
             const current = regionStatus[region];
             const previous = lastStatusSnapshot[region];
@@ -385,7 +392,10 @@
                 if (st && st.droneDanger) return 2;
                 return 1;
             };
-            if (getLevel(current) > getLevel(previous)) {
+            const currentLevel = getLevel(current);
+            const previousLevel = getLevel(previous);
+            console.log(`Регион ${region}: текущий уровень=${currentLevel}, предыдущий=${previousLevel}`);
+            if (currentLevel > previousLevel) {
                 let title = `⚠️ Тревога в регионе ${region}`;
                 let body = "";
                 if (current.rocket) body = "🟤 РАКЕТНАЯ ОПАСНОСТЬ! Немедленно укройтесь!";
@@ -394,6 +404,7 @@
                 showNotification(title, body);
             }
         }
+        // Сохраняем текущий снимок для следующего сравнения
         lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
     }
     
@@ -405,12 +416,15 @@
         
         function renderList(filterText = "") {
             const filtered = regionsList.filter(r => r.toLowerCase().includes(filterText.toLowerCase()));
-            return filtered.map(r => `
-                <div class="region-check">
-                    <input type="checkbox" value="${r}" id="chk_${r.replace(/\s/g, '_')}" ${selectedRegions.includes(r) ? 'checked' : ''}>
-                    <label for="chk_${r.replace(/\s/g, '_')}">${r}</label>
-                </div>
-            `).join('');
+            return filtered.map(r => {
+                const safeId = "chk_" + r.replace(/[^a-zA-Zа-яА-Я0-9]/g, '_');
+                return `
+                    <div class="region-check">
+                        <input type="checkbox" value="${r}" id="${safeId}" ${selectedRegions.includes(r) ? 'checked' : ''}>
+                        <label for="${safeId}">${r}</label>
+                    </div>
+                `;
+            }).join('');
         }
         
         modal.innerHTML = `
@@ -429,23 +443,28 @@
         const searchInput = modal.querySelector('#regionSearch');
         const regionListDiv = modal.querySelector('#regionList');
         
-        searchInput.addEventListener('input', (e) => {
-            regionListDiv.innerHTML = renderList(e.target.value);
-        });
+        const updateList = () => {
+            regionListDiv.innerHTML = renderList(searchInput.value);
+        };
+        searchInput.addEventListener('input', updateList);
         
         const saveBtn = modal.querySelector('#notifySaveBtn');
         const cancelBtn = modal.querySelector('#notifyCancelBtn');
         
         saveBtn.addEventListener('click', () => {
             const newSelected = [];
-            regionsList.forEach(r => {
-                const chk = modal.querySelector(`#chk_${r.replace(/\s/g, '_')}`);
-                if (chk && chk.checked) newSelected.push(r);
+            // Собираем все чекбоксы из всего документа модального окна (даже скрытые поиском)
+            const allChecks = modal.querySelectorAll('.region-check input[type="checkbox"]');
+            allChecks.forEach(chk => {
+                if (chk.checked) {
+                    newSelected.push(chk.value);
+                }
             });
             selectedRegions = newSelected;
             saveSelectedRegions();
             modal.remove();
             showToast(`Выбрано ${selectedRegions.length} регионов для уведомлений`);
+            console.log("Сохранено:", selectedRegions);
         });
         cancelBtn.addEventListener('click', () => modal.remove());
     }
@@ -457,6 +476,7 @@
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
             if (data && data.regions) {
+                // Обновляем статусы
                 for (const [region, st] of Object.entries(data.regions)) {
                     if (ignoredRegions.includes(region)) continue;
                     regionStatus[region] = { rocket: !!st.rocket, droneAlert: !!st.droneAlert, droneDanger: !!st.droneDanger };
@@ -467,7 +487,15 @@
                 lastUpdateTime = data.last_updated ? new Date(data.last_updated) : new Date();
                 updateMapAndPanel();
                 updateLastUpdateInfo();
-                checkAndNotify();
+                
+                // При первой загрузке инициализируем снимок статусов, чтобы уведомления не приходили на уже существующие тревоги
+                if (isFirstLoad) {
+                    lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus));
+                    isFirstLoad = false;
+                    console.log("Первый снимок статусов создан");
+                } else {
+                    checkAndNotify();
+                }
             } else throw new Error("Неверный формат alerts.json");
         } catch (err) { console.error(err); }
     }
@@ -754,7 +782,6 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     loadSelectedRegions();
-    setTimeout(() => { if(Object.keys(regionStatus).length) lastStatusSnapshot = JSON.parse(JSON.stringify(regionStatus)); }, 5000);
     
     // ---------- ОБРАБОТЧИКИ ----------
     document.getElementById('settingsGear').addEventListener('click', () => showSettingsModal());
