@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-08T21:20:35.858788+00:00",
+  "last_updated": "2026-06-08T21:25:29.371946+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -55,6 +55,12 @@
       "rocket": false,
       "droneAlert": false,
       "droneDanger": false
+    },
+    "Курская область": {
+      "rocket": false,
+      "droneAlert": true,
+      "droneDanger": false,
+      "droneAlert_time": "2026-06-08T21:25:29.365138+00:00"
     },
     "Липецкая область": {
       "rocket": false,
@@ -151,7 +157,7 @@
       "droneAlert": false,
       "droneDanger": false
     },
-    "Чувашская Республика": {
+    "Чувашия": {
       "rocket": false,
       "droneAlert": false,
       "droneDanger": false
@@ -301,7 +307,7 @@
       "droneAlert": false,
       "droneDanger": false
     },
-    "Вологодская обласьь": {
+    "ЯНАО": {
       "rocket": false,
       "droneAlert": false,
       "droneDanger": false
