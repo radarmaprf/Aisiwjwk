@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-08T21:23:18.485095+00:00",
+  "last_updated": "2026-06-08T21:20:35.858788+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -19,7 +19,7 @@
     "Ленинградская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Белгородская область": {
       "rocket": false,
@@ -29,7 +29,7 @@
     "Брянская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Владимирская область": {
       "rocket": false,
@@ -55,12 +55,6 @@
       "rocket": false,
       "droneAlert": false,
       "droneDanger": false
-    },
-    "Курская область": {
-      "rocket": false,
-      "droneAlert": true,
-      "droneDanger": false,
-      "droneAlert_time": "2026-06-08T21:23:18.478260+00:00"
     },
     "Липецкая область": {
       "rocket": false,
@@ -128,7 +122,7 @@
       "droneDanger": true
     },
     "Ставропольский край": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -138,7 +132,7 @@
       "droneDanger": true
     },
     "Волгоградская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -153,12 +147,12 @@
       "droneDanger": false
     },
     "Марий Эл": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
-    "Чувашия": {
-      "rocket": true,
+    "Чувашская Республика": {
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -168,7 +162,7 @@
       "droneDanger": false
     },
     "Удмуртская Республика": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -188,12 +182,12 @@
       "droneDanger": false
     },
     "Свердловская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
     "Челябинская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -203,7 +197,7 @@
       "droneDanger": false
     },
     "Пермский край": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -280,7 +274,7 @@
     "Крым": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Дагестан": {
       "rocket": false,
@@ -307,7 +301,7 @@
       "droneAlert": false,
       "droneDanger": false
     },
-    "ЯНАО": {
+    "Вологодская обласьь": {
       "rocket": false,
       "droneAlert": false,
       "droneDanger": false
