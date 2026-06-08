@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Tuple
 
 # ---------- НАСТРОЙКИ ----------
-CHANNEL = "radaryraltest"
+CHANNEL = "vrv_radar"
 BASE_URL = f"https://t.me/s/{CHANNEL}"
 POSTS_LIMIT = 200
 IGNORED_REGIONS = ["Астраханская область", "Архангельская область", "Омская область"]
