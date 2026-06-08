@@ -9,7 +9,7 @@ from typing import Dict, List, Tuple
 CHANNEL = "vrv_radar"
 BASE_URL = f"https://t.me/s/{CHANNEL}"
 POSTS_LIMIT = 200
-IGNORED_REGIONS = ["Астраханская область", "Архангельская область", "Омская область"]
+IGNORED_REGIONS = ["Астраханская область", "Архангельская область", "Омская область", "Курганская область"]
 
 REGION_ALIASES = {
     "Москва": ["москва"], "Московская область": ["московская область", "подмосковье"],
