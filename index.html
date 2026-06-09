@@ -14,7 +14,6 @@
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
-        /* Все ваши стили полностью сохранены, я их не менял, только добавил стиль для текстовых меток */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #0a0e1a;
@@ -22,6 +21,7 @@
             overflow: hidden;
             transition: background 0.3s ease;
         }
+        /* ========== СВЕТЛАЯ ТЕМА ========== */
         body.light-theme { background: #eef2f5; }
         body.light-theme .clock,
         body.light-theme .legend,
@@ -60,6 +60,7 @@
         body.light-theme .install-dot { background: #ccc; }
         body.light-theme .install-dot.active { background: #b13b00; }
         
+        /* ========== ТЁМНАЯ ТЕМА ========== */
         .clock, .legend, .update-info, .ruler-panel, .forecast-panel, .toolbar, .settings-modal, .install-modal {
             background: rgba(10,14,26,0.95);
             backdrop-filter: blur(12px);
@@ -233,6 +234,7 @@
             text-align: center;
             font-size: 1.3rem;
         }
+        /* Карусель (горизонтальная прокрутка) */
         .install-carousel {
             display: flex;
             overflow-x: auto;
@@ -286,6 +288,7 @@
         .install-step-text strong {
             color: #ffc107;
         }
+        /* Картинки-заглушки – замените на свои реальные скриншоты */
         .install-step-img {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -295,6 +298,7 @@
             padding: 8px;
             width: 100%;
         }
+        /* Точки навигации */
         .install-dots {
             display: flex;
             justify-content: center;
@@ -411,28 +415,6 @@
         body.device-computer .legend { bottom: 20px; left: 20px; padding: 10px 16px; font-size: 0.75rem; }
         body.device-computer .update-info { bottom: 20px; right: 20px; padding: 6px 16px; font-size: 0.75rem; }
         body.device-computer .settings-modal-content, body.device-computer .install-modal-content { width: 400px; }
-        
-        /* Стиль для текстовых меток регионов */
-        .region-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
-            background: rgba(0,0,0,0.5);
-            padding: 2px 6px;
-            border-radius: 12px;
-            white-space: nowrap;
-            font-family: 'Segoe UI', sans-serif;
-            pointer-events: none;
-            border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(2px);
-        }
-        body.light-theme .region-label {
-            color: #111;
-            text-shadow: 1px 1px 0 rgba(255,255,255,0.8), -1px -1px 0 rgba(255,255,255,0.8);
-            background: rgba(255,255,255,0.7);
-            border-color: rgba(0,0,0,0.2);
-        }
     </style>
 </head>
 <body>
@@ -497,7 +479,6 @@
     
     // ---------- ДАННЫЕ ----------
     let polygonsLayer = null;
-    let labelsLayer = null; // слой для текстовых меток регионов
     let regionStatus = {};
     let lastUpdateTime = null;
     const colors = { clear:"#6c757d", droneDanger:"#ffc107", droneAlert:"#dc3545", rocket:"#8B0000" };
@@ -562,30 +543,6 @@
         "Санкт-Петербург":"Санкт-Петербург","Республика Крым":"Крым"
     };
     function normalizeRegionName(geoName) { return geoNameMapping[geoName] || geoName; }
-    
-    // Функция для обновления текстовых меток регионов
-    function updateRegionLabels() {
-        if (labelsLayer) map.removeLayer(labelsLayer);
-        if (!polygonsLayer) return;
-        labelsLayer = L.layerGroup().addTo(map);
-        polygonsLayer.eachLayer(layer => {
-            const name = layer.regionName;
-            if (!name) return;
-            const center = layer.getBounds().getCenter();
-            // Создаём красивую метку с фоном
-            const label = L.marker(center, {
-                icon: L.divIcon({
-                    className: 'region-label',
-                    html: `<div class="region-label">${name}</div>`,
-                    iconSize: null,
-                    iconAnchor: [0, 0]
-                }),
-                interactive: false,
-                zIndexOffset: 1000
-            });
-            labelsLayer.addLayer(label);
-        });
-    }
     
     // ---------- ПРОГНОЗ ----------
     function getForecastArray() {
@@ -715,7 +672,6 @@
         });
         updateAlertsPanel();
         updateForecast();
-        updateRegionLabels(); // обновляем текстовые метки регионов
     }
     
     function updateAlertsPanel() {
@@ -981,7 +937,7 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
-    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ ----------
+    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ (ТЕПЕРЬ С КРУПНЫМИ ИКОНКАМИ) ----------
     function showInstallModal() {
         const modal = document.createElement('div');
         modal.className = 'install-modal';
@@ -995,6 +951,7 @@
                             <p><strong>Нажмите кнопку «Поделиться»</strong></p>
                             <p>В Safari внизу экрана нажмите на иконку квадрата со стрелкой</p>
                         </div>
+                        <!-- ЗДЕСЬ МОЖЕТЕ ВСТАВИТЬ СВОЙ СКРИНШОТ: <img src="share.png" alt="share"> -->
                         <div class="install-step-img">📸 <em>Пример: иконка Share</em></div>
                     </div>
                     <div class="install-step-card">
@@ -1003,6 +960,7 @@
                             <p><strong>Выберите «На экран “Домой”»</strong></p>
                             <p>Прокрутите меню вниз и нажмите на пункт «На экран “Домой”»</p>
                         </div>
+                        <!-- <img src="addtohome.png" alt="add to home"> -->
                         <div class="install-step-img">📸 <em>Пример: меню Safari</em></div>
                     </div>
                     <div class="install-step-card">
@@ -1011,20 +969,25 @@
                             <p><strong>Нажмите «Добавить»</strong></p>
                             <p>При необходимости измените название и подтвердите установку</p>
                         </div>
+                        <!-- <img src="confirm.png" alt="confirm"> -->
                         <div class="install-step-img">📸 <em>Пример: подтверждение</em></div>
                     </div>
                 </div>
                 <div class="install-dots" id="installDots"></div>
-                <div class="install-note">Иконка приложения появится на рабочем столе. Запускайте карту как обычное приложение!</div>
+                <div class="install-note">
+                    Иконка приложения появится на рабочем столе. Запускайте карту как обычное приложение!
+                </div>
                 <button class="close-install">Понятно, закрыть</button>
             </div>
         `;
         document.body.appendChild(modal);
         
+        // Управление точками навигации
         const carousel = modal.querySelector('#installCarousel');
         const dotsContainer = modal.querySelector('#installDots');
         const cards = modal.querySelectorAll('.install-step-card');
         const totalSteps = cards.length;
+        
         for (let i = 0; i < totalSteps; i++) {
             const dot = document.createElement('div');
             dot.classList.add('install-dot');
@@ -1034,6 +997,7 @@
             });
             dotsContainer.appendChild(dot);
         }
+        
         const dots = modal.querySelectorAll('.install-dot');
         const updateActiveDot = () => {
             const scrollLeft = carousel.scrollLeft;
@@ -1046,9 +1010,11 @@
         };
         carousel.addEventListener('scroll', updateActiveDot);
         window.addEventListener('resize', updateActiveDot);
+        
         const closeBtn = modal.querySelector('.close-install');
         closeBtn.addEventListener('click', () => modal.remove());
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.remove(); });
+        
         setTimeout(updateActiveDot, 100);
     }
     
@@ -1074,3 +1040,5 @@
 </script>
 </body>
 </html>
+
+
