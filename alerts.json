@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-09T02:30:46.354399+00:00",
+  "last_updated": "2026-06-09T02:35:29.961149+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354119+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.960703+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -51,7 +51,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354201+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.960812+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354338+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.960990+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -104,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354146+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.960741+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -115,13 +115,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354089+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.960656+00:00"
     },
     "Тульская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-09T02:30:46.354366+00:00"
+      "droneAlert_time": "2026-06-09T02:35:29.961026+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -131,7 +131,7 @@
     "Краснодарский край": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Ставропольский край": {
       "rocket": false,
@@ -141,7 +141,7 @@
     "Ростовская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Волгоградская область": {
       "rocket": false,
