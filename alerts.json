@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-10T22:15:37.681376+00:00",
+  "last_updated": "2026-06-10T22:20:39.530990+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.681253+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.530952+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,7 +31,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.679715+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.529071+00:00"
     },
     "Владимирская область": {
       "rocket": false,
@@ -52,7 +52,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.681031+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.530429+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.681102+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.530503+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -104,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.680520+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.529902+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -120,7 +120,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.681288+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.530693+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -131,7 +131,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T22:15:37.681327+00:00"
+      "droneAlert_time": "2026-06-10T22:20:39.530768+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
