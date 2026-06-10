@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-10T15:05:39.047830+00:00",
+  "last_updated": "2026-06-10T15:10:38.560990+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T15:05:39.047793+00:00"
+      "droneAlert_time": "2026-06-10T15:10:38.560953+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -51,7 +51,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T15:05:39.047487+00:00"
+      "droneAlert_time": "2026-06-10T15:10:38.560557+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T15:05:39.047575+00:00"
+      "droneAlert_time": "2026-06-10T15:10:38.560669+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -104,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T15:05:39.047075+00:00"
+      "droneAlert_time": "2026-06-10T15:10:38.559996+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -135,7 +135,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-10T15:05:39.041845+00:00"
+      "droneAlert_time": "2026-06-10T15:10:38.552972+00:00"
     },
     "Ростовская область": {
       "rocket": false,
