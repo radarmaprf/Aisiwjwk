@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-11T12:30:32.534204+00:00",
+  "last_updated": "2026-06-11T12:35:34.647939+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.534120+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.647858+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,7 +31,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.527992+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.641699+00:00"
     },
     "Владимирская область": {
       "rocket": false,
@@ -52,7 +52,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.534008+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.647745+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.532523+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.646247+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -99,13 +99,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.534082+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.647820+00:00"
     },
     "Смоленская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.530008+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.643738+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -121,7 +121,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-11T12:30:32.534045+00:00"
+      "droneAlert_time": "2026-06-11T12:35:34.647783+00:00"
     },
     "Ярославская область": {
       "rocket": false,
