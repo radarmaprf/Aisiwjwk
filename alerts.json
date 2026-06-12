@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-12T12:25:41.034250+00:00",
+  "last_updated": "2026-06-12T12:30:46.558550+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.034212+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.558441+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -36,7 +36,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.034169+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.558399+00:00"
     },
     "Воронежская область": {
       "rocket": false,
@@ -52,7 +52,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.033903+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.558512+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.033718+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.557950+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -104,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.033793+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.558025+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -120,7 +120,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.034048+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.558294+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -171,7 +171,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T12:25:41.030008+00:00"
+      "droneAlert_time": "2026-06-12T12:30:46.554266+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
