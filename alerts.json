@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-12T22:40:41.596548+00:00",
+  "last_updated": "2026-06-12T22:45:42.729904+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -40,7 +40,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.595469+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.728798+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -51,7 +51,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.594546+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.727884+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -82,7 +82,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.592168+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.725516+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -103,7 +103,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.594052+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.727387+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -114,7 +114,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.594892+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.728227+00:00"
     },
     "Тульская область": {
       "rocket": false,
@@ -140,12 +140,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-12T22:40:41.596331+00:00"
+      "droneAlert_time": "2026-06-12T22:45:42.729655+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
-      "droneAlert": false,
-      "droneDanger": true
+      "droneAlert": true,
+      "droneDanger": false,
+      "droneAlert_time": "2026-06-12T22:45:42.729865+00:00"
     },
     "Татарстан": {
       "rocket": false,
