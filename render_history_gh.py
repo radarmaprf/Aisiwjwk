@@ -14,7 +14,7 @@ from matplotlib.transforms import Bbox
 ALERTS_FILE = "alerts.json"
 OUTPUT_VIDEO = "alerts_timelapse.mp4"
 FPS = 20
-MAX_COMMITS = 300
+MAX_COMMITS = 450
 COLORS = {
     "clear": "#6c757d",
     "droneDanger": "#ffc107",
