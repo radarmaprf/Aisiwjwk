@@ -1,0 +1,40 @@
+name: Render time-lapse video
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # каждый день в 2:00 ночи
+  workflow_dispatch:       # можно запустить вручную в интерфейсе GitHub
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # вся история (все коммиты)
+      
+      - name: Установка Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Установка зависимостей
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          pip install geopandas matplotlib pillow gitpython tqdm
+      
+      - name: Рендеринг видео из истории alerts.json
+        run: python render_history_gh.py
+      
+      - name: Загрузка видео в релиз
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: "timelapse-latest"
+          name: "Таймлапс тревог (последний)"
+          files: alerts_timelapse.mp4
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
