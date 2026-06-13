@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-13T21:00:52.887382+00:00",
+  "last_updated": "2026-06-13T21:05:40.756010+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-13T21:00:52.886093+00:00"
+      "droneAlert_time": "2026-06-13T21:05:40.754594+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -41,7 +41,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-13T21:00:52.887241+00:00"
+      "droneAlert_time": "2026-06-13T21:05:40.755749+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -82,12 +82,12 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-13T21:00:52.887279+00:00"
+      "droneAlert_time": "2026-06-13T21:05:40.755891+00:00"
     },
     "Пензенская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Псковская область": {
       "rocket": false,
@@ -182,7 +182,7 @@
     "Саратовская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Ульяновская область": {
       "rocket": false,
