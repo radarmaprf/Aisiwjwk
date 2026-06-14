@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-14T21:10:42.037259+00:00",
+  "last_updated": "2026-06-14T21:15:41.949473+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-14T21:10:42.035604+00:00"
+      "droneAlert_time": "2026-06-14T21:15:41.947719+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -41,7 +41,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-14T21:10:42.036265+00:00"
+      "droneAlert_time": "2026-06-14T21:15:41.948369+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -50,8 +50,9 @@
     },
     "Калужская область": {
       "rocket": false,
-      "droneAlert": false,
-      "droneDanger": true
+      "droneAlert": true,
+      "droneDanger": false,
+      "droneAlert_time": "2026-06-14T21:15:41.949419+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -82,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-14T21:10:42.036465+00:00"
+      "droneAlert_time": "2026-06-14T21:15:41.948575+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -103,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-14T21:10:42.036505+00:00"
+      "droneAlert_time": "2026-06-14T21:15:41.948614+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -139,7 +140,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-14T21:10:42.036340+00:00"
+      "droneAlert_time": "2026-06-14T21:15:41.948444+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
@@ -289,7 +290,7 @@
     "Дагестан": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Республика Карелия": {
       "rocket": false,
