@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-15T20:45:49.249282+00:00",
+  "last_updated": "2026-06-15T20:53:01.819746+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -30,7 +30,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-15T20:45:49.244932+00:00"
+      "droneAlert_time": "2026-06-15T20:53:01.813840+00:00"
     },
     "Владимирская область": {
       "rocket": false,
@@ -61,7 +61,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-15T20:45:49.247378+00:00"
+      "droneAlert_time": "2026-06-15T20:53:01.817027+00:00"
     },
     "Липецкая область": {
       "rocket": false,
@@ -125,8 +125,9 @@
     },
     "Краснодарский край": {
       "rocket": false,
-      "droneAlert": false,
-      "droneDanger": true
+      "droneAlert": true,
+      "droneDanger": false,
+      "droneAlert_time": "2026-06-15T20:53:01.819625+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -137,7 +138,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-15T20:45:49.249177+00:00"
+      "droneAlert_time": "2026-06-15T20:53:01.819700+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
