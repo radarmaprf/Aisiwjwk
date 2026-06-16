@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-16T16:25:39.325294+00:00",
+  "last_updated": "2026-06-16T16:30:57.822196+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.321904+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.818735+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -36,7 +36,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.325164+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.822058+00:00"
     },
     "Воронежская область": {
       "rocket": false,
@@ -72,7 +72,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.323206+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.820073+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.323487+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.820354+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -119,13 +119,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.323628+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.820495+00:00"
     },
     "Ярославская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.320888+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.817695+00:00"
     },
     "Краснодарский край": {
       "rocket": false,
@@ -286,7 +286,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T16:25:39.324980+00:00"
+      "droneAlert_time": "2026-06-16T16:30:57.821873+00:00"
     },
     "Дагестан": {
       "rocket": false,
