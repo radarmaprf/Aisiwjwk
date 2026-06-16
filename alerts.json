@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-16T13:05:44.540399+00:00",
+  "last_updated": "2026-06-16T13:10:58.546508+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.537684+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.543772+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -71,7 +71,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.539026+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.545098+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -82,7 +82,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.539324+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.545384+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -98,7 +98,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.540164+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.546233+00:00"
     },
     "Смоленская область": {
       "rocket": false,
@@ -119,13 +119,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.539467+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.545533+00:00"
     },
     "Ярославская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-16T13:05:44.536613+00:00"
+      "droneAlert_time": "2026-06-16T13:10:58.542679+00:00"
     },
     "Краснодарский край": {
       "rocket": false,
@@ -135,7 +135,7 @@
     "Ставропольский край": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Ростовская область": {
       "rocket": false,
