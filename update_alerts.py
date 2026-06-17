@@ -11,6 +11,15 @@ BASE_URL = f"https://t.me/s/{CHANNEL}"
 POSTS_LIMIT = 200
 IGNORED_REGIONS = ["Астраханская область", "Архангельская область", "Омская область", "Курганская область"]
 
+# Стоп-слова для фильтрации рекламных / информационных сообщений
+STOP_WORDS = [
+    "реклама", "подпишись", "подписаться", "каналы", "телеграм", "telegram",
+    "бот", "сводки", "новости", "срочно", "важно", "обзор", "дайджест",
+    "канал", "чат", "группа", "вконтакте", "vk", "youtube", "инстаграм",
+    "instagram", "facebook", "twitter", "ссылка", "поддержать", "донат",
+    "промокод", "скидка", "акция", "партнёр", "репост", "лайк", "комментарий"
+]
+
 REGION_ALIASES = {
     "Москва": ["москва"], "Московская область": ["московская область", "подмосковье"],
     "Санкт-Петербург": ["санкт-петербург", "питер", "спб"],
@@ -122,6 +131,14 @@ def extract_posts(html: str) -> List[Tuple[int, str]]:
             posts.append((post_id, text))
     return posts
 
+def is_advertisement(text: str) -> bool:
+    """Проверяет, содержит ли текст рекламные/информационные маркеры"""
+    text_lower = text.lower()
+    for word in STOP_WORDS:
+        if word in text_lower:
+            return True
+    return False
+
 def classify_message(text: str):
     # Глобальный отбой БПЛА по всем регионам
     if re.search(r'отбой.*бпла.*всех.*регион|снята угроза бпла во всех регионах|отбой опасности по бпла во всех ранее объявленных регионах', text):
@@ -214,6 +231,11 @@ def compute_status() -> Dict[str, Dict]:
 
     posts = fetch_all_posts()
     for pid, text in posts:
+        # ---------- ФИЛЬТР РЕКЛАМЫ ----------
+        if is_advertisement(text):
+            print(f"[{pid}] Сообщение пропущено (реклама/информация): {text[:50]}...")
+            continue
+
         msg_type, subtype = classify_message(text)
         if msg_type == 'globalCancelDrone':
             # Глобальный отбой БПЛА: снимаем все тревоги БПЛА
