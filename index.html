@@ -288,7 +288,6 @@
         .install-step-text strong {
             color: #ffc107;
         }
-        /* Картинки-заглушки – замените на свои реальные скриншоты */
         .install-step-img {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -298,7 +297,6 @@
             padding: 8px;
             width: 100%;
         }
-        /* Точки навигации */
         .install-dots {
             display: flex;
             justify-content: center;
@@ -375,7 +373,7 @@
             cursor: pointer;
         }
 
-        /* Адаптация под устройства (классы) */
+        /* Адаптация под устройства */
         body.device-phone .clock { top: 12px; right: 60px; padding: 4px 10px; }
         body.device-phone .time-main { font-size: 1.2rem; }
         body.device-phone .settings-gear { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 1.2rem; }
@@ -475,7 +473,47 @@
     const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd' });
     let currentTile = darkTile;
     currentTile.addTo(map);
-    function switchTileTheme(isLight) { map.removeLayer(currentTile); currentTile = isLight ? lightTile : darkTile; currentTile.addTo(map); }
+    
+    // ---------- МАСКА (затемнение за пределами России) ----------
+    let maskLayer = null;
+    function createMask(isLight) {
+        if (maskLayer) map.removeLayer(maskLayer);
+        const color = isLight ? '#ffffff' : '#000000';
+        maskLayer = L.rectangle([[ -90, -180 ], [ 90, 180 ]], {
+            color: color,
+            fillColor: color,
+            fillOpacity: 1,
+            weight: 0,
+            interactive: false,
+            pane: 'tilePane' // помещаем под тайлы, чтобы они были видны внутри России
+        }).addTo(map);
+        // Чтобы маска была под тайлами, но над фоном, поместим её в tilePane (по умолчанию тайлы в tilePane, а полигоны в overlayPane).
+        // Но нам нужно, чтобы маска была под полигонами, но над тайлами? Нет, мы хотим, чтобы тайлы были видны только там, где есть полигоны.
+        // Если маска будет в tilePane, то она будет под тайлами, и тайлы будут видны везде, что нам не нужно.
+        // Нам нужно, чтобы маска была над тайлами, но под полигонами. Полигоны находятся в overlayPane по умолчанию.
+        // Поэтому поместим маску в overlayPane, но с более низким z-index.
+        // Используем setZIndex: 
+        if (maskLayer) {
+            // Устанавливаем z-index меньше, чем у полигонов (по умолчанию полигоны имеют z-index 200)
+            maskLayer.setZIndex(100);
+        }
+    }
+    // Функция обновления цвета маски при смене темы
+    function updateMaskColor(isLight) {
+        if (maskLayer) {
+            const color = isLight ? '#ffffff' : '#000000';
+            maskLayer.setStyle({ color: color, fillColor: color });
+        }
+    }
+    // Создаём маску сразу после инициализации карты
+    createMask(false); // по умолчанию тёмная тема
+    
+    function switchTileTheme(isLight) {
+        map.removeLayer(currentTile);
+        currentTile = isLight ? lightTile : darkTile;
+        currentTile.addTo(map);
+        updateMaskColor(isLight);
+    }
     
     // ---------- ДАННЫЕ ----------
     let polygonsLayer = null;
@@ -803,7 +841,9 @@
             .catch(()=>fetch(fallback).then(r=>r.json()).then(data=>applyPolygons(data)).catch(e=>console.warn("Границы не загружены",e)));
     }
     function applyPolygons(geoData) {
-        if(polygonsLayer) map.removeLayer(polygonsLayer);
+        if(polygonsLayer) {
+            map.removeLayer(polygonsLayer);
+        }
         polygonsLayer = L.geoJSON(geoData, {
             style: (feature) => {
                 let name = feature.properties?.name || feature.properties?.NAME || feature.properties?.admin_name || "";
@@ -820,6 +860,8 @@
                 }
             }
         }).addTo(map);
+        // Убедимся, что полигоны находятся выше маски (по умолчанию overlayPane имеет z-index 200, маска у нас 100)
+        // Если маска была добавлена в overlayPane, то полигоны будут выше.
         try { map.fitBounds(polygonsLayer.getBounds()); } catch(e) { map.setView([62,105],3.8); }
         updateMapAndPanel();
     }
@@ -937,7 +979,7 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
-    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ (ТЕПЕРЬ С КРУПНЫМИ ИКОНКАМИ) ----------
+    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ ----------
     function showInstallModal() {
         const modal = document.createElement('div');
         modal.className = 'install-modal';
@@ -951,7 +993,6 @@
                             <p><strong>Нажмите кнопку «Поделиться»</strong></p>
                             <p>В Safari внизу экрана нажмите на иконку квадрата со стрелкой</p>
                         </div>
-                        <!-- ЗДЕСЬ МОЖЕТЕ ВСТАВИТЬ СВОЙ СКРИНШОТ: <img src="share.png" alt="share"> -->
                         <div class="install-step-img">📸 <em>Пример: иконка Share</em></div>
                     </div>
                     <div class="install-step-card">
@@ -960,7 +1001,6 @@
                             <p><strong>Выберите «На экран “Домой”»</strong></p>
                             <p>Прокрутите меню вниз и нажмите на пункт «На экран “Домой”»</p>
                         </div>
-                        <!-- <img src="addtohome.png" alt="add to home"> -->
                         <div class="install-step-img">📸 <em>Пример: меню Safari</em></div>
                     </div>
                     <div class="install-step-card">
@@ -969,7 +1009,6 @@
                             <p><strong>Нажмите «Добавить»</strong></p>
                             <p>При необходимости измените название и подтвердите установку</p>
                         </div>
-                        <!-- <img src="confirm.png" alt="confirm"> -->
                         <div class="install-step-img">📸 <em>Пример: подтверждение</em></div>
                     </div>
                 </div>
@@ -982,7 +1021,6 @@
         `;
         document.body.appendChild(modal);
         
-        // Управление точками навигации
         const carousel = modal.querySelector('#installCarousel');
         const dotsContainer = modal.querySelector('#installDots');
         const cards = modal.querySelectorAll('.install-step-card');
@@ -1040,5 +1078,3 @@
 </script>
 </body>
 </html>
-
-
