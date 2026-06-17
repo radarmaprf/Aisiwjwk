@@ -458,7 +458,7 @@
     <small>★ Два клика → точки A и B</small>
 </div>
 
-<div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0; z-index:1;"></div>
+<div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0; z-index:1; background:#0a0e1a;"></div>
 <div id="alertsPanel" class="alerts-panel">
     <div class="panel-header"><h3>🚨 Активные тревоги</h3><div><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div></div>
     <div class="panel-content" id="panelContent"><div class="empty-message">Нет активных тревог</div></div>
@@ -469,52 +469,9 @@
 (function(){
     // ---------- КАРТА ----------
     const map = L.map('map', { zoomControl: false }).setView([62,105],3.8);
-    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd', maxZoom:10 });
-    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd' });
-    let currentTile = darkTile;
-    currentTile.addTo(map);
-    
-    // ---------- МАСКА (затемнение за пределами России) ----------
-    let maskLayer = null;
-    function createMask(isLight) {
-        if (maskLayer) map.removeLayer(maskLayer);
-        const color = isLight ? '#ffffff' : '#000000';
-        maskLayer = L.rectangle([[ -90, -180 ], [ 90, 180 ]], {
-            color: color,
-            fillColor: color,
-            fillOpacity: 1,
-            weight: 0,
-            interactive: false,
-            pane: 'tilePane' // помещаем под тайлы, чтобы они были видны внутри России
-        }).addTo(map);
-        // Чтобы маска была под тайлами, но над фоном, поместим её в tilePane (по умолчанию тайлы в tilePane, а полигоны в overlayPane).
-        // Но нам нужно, чтобы маска была под полигонами, но над тайлами? Нет, мы хотим, чтобы тайлы были видны только там, где есть полигоны.
-        // Если маска будет в tilePane, то она будет под тайлами, и тайлы будут видны везде, что нам не нужно.
-        // Нам нужно, чтобы маска была над тайлами, но под полигонами. Полигоны находятся в overlayPane по умолчанию.
-        // Поэтому поместим маску в overlayPane, но с более низким z-index.
-        // Используем setZIndex: 
-        if (maskLayer) {
-            // Устанавливаем z-index меньше, чем у полигонов (по умолчанию полигоны имеют z-index 200)
-            maskLayer.setZIndex(100);
-        }
-    }
-    // Функция обновления цвета маски при смене темы
-    function updateMaskColor(isLight) {
-        if (maskLayer) {
-            const color = isLight ? '#ffffff' : '#000000';
-            maskLayer.setStyle({ color: color, fillColor: color });
-        }
-    }
-    // Создаём маску сразу после инициализации карты
-    createMask(false); // по умолчанию тёмная тема
-    
-    function switchTileTheme(isLight) {
-        map.removeLayer(currentTile);
-        currentTile = isLight ? lightTile : darkTile;
-        currentTile.addTo(map);
-        updateMaskColor(isLight);
-    }
-    
+    // Устанавливаем фон карты в зависимости от темы (будет меняться через CSS)
+    // Тайлы не используются, только полигоны
+
     // ---------- ДАННЫЕ ----------
     let polygonsLayer = null;
     let regionStatus = {};
@@ -841,9 +798,7 @@
             .catch(()=>fetch(fallback).then(r=>r.json()).then(data=>applyPolygons(data)).catch(e=>console.warn("Границы не загружены",e)));
     }
     function applyPolygons(geoData) {
-        if(polygonsLayer) {
-            map.removeLayer(polygonsLayer);
-        }
+        if(polygonsLayer) map.removeLayer(polygonsLayer);
         polygonsLayer = L.geoJSON(geoData, {
             style: (feature) => {
                 let name = feature.properties?.name || feature.properties?.NAME || feature.properties?.admin_name || "";
@@ -860,8 +815,6 @@
                 }
             }
         }).addTo(map);
-        // Убедимся, что полигоны находятся выше маски (по умолчанию overlayPane имеет z-index 200, маска у нас 100)
-        // Если маска была добавлена в overlayPane, то полигоны будут выше.
         try { map.fitBounds(polygonsLayer.getBounds()); } catch(e) { map.setView([62,105],3.8); }
         updateMapAndPanel();
     }
@@ -874,8 +827,15 @@
     let epicenterEnabled = true;
     
     function applySettings() {
-        if(isLightTheme) { document.body.classList.add('light-theme'); switchTileTheme(true); }
-        else { document.body.classList.remove('light-theme'); switchTileTheme(false); }
+        // Меняем фон карты через CSS класс на контейнере карты
+        const mapContainer = map.getContainer();
+        if(isLightTheme) {
+            document.body.classList.add('light-theme');
+            mapContainer.style.background = '#eef2f5';
+        } else {
+            document.body.classList.remove('light-theme');
+            mapContainer.style.background = '#0a0e1a';
+        }
         
         const toolbar = document.getElementById('toolbar');
         const rulerPanel = document.getElementById('rulerPanel');
