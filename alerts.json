@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-17T03:50:43.309632+00:00",
+  "last_updated": "2026-06-17T03:55:34.347559+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
@@ -10,7 +10,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.309109+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.347015+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -51,7 +51,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.309288+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.347190+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -67,7 +67,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.309547+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.347435+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.308499+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.346398+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -99,7 +99,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.306216+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.344111+00:00"
     },
     "Смоленская область": {
       "rocket": false,
@@ -120,7 +120,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-17T03:50:43.309499+00:00"
+      "droneAlert_time": "2026-06-17T03:55:34.347399+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -130,7 +130,7 @@
     "Краснодарский край": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Ставропольский край": {
       "rocket": false,
