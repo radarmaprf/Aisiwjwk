@@ -288,6 +288,7 @@
         .install-step-text strong {
             color: #ffc107;
         }
+        /* Картинки-заглушки – замените на свои реальные скриншоты */
         .install-step-img {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -297,6 +298,7 @@
             padding: 8px;
             width: 100%;
         }
+        /* Точки навигации */
         .install-dots {
             display: flex;
             justify-content: center;
@@ -373,7 +375,7 @@
             cursor: pointer;
         }
 
-        /* Адаптация под устройства */
+        /* Адаптация под устройства (классы) */
         body.device-phone .clock { top: 12px; right: 60px; padding: 4px 10px; }
         body.device-phone .time-main { font-size: 1.2rem; }
         body.device-phone .settings-gear { top: 12px; right: 12px; width: 36px; height: 36px; font-size: 1.2rem; }
@@ -458,7 +460,7 @@
     <small>★ Два клика → точки A и B</small>
 </div>
 
-<div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0; z-index:1; background:#0a0e1a;"></div>
+<div id="map" style="width:100vw; height:100vh; position:absolute; top:0; left:0; z-index:1;"></div>
 <div id="alertsPanel" class="alerts-panel">
     <div class="panel-header"><h3>🚨 Активные тревоги</h3><div><button class="copy-btn" id="copyAlertsBtn">📋 Копировать</button><button class="close-panel" id="closePanelBtn">&times;</button></div></div>
     <div class="panel-content" id="panelContent"><div class="empty-message">Нет активных тревог</div></div>
@@ -469,9 +471,12 @@
 (function(){
     // ---------- КАРТА ----------
     const map = L.map('map', { zoomControl: false }).setView([62,105],3.8);
-    // Устанавливаем фон карты в зависимости от темы (будет меняться через CSS)
-    // Тайлы не используются, только полигоны
-
+    const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd', maxZoom:10 });
+    const lightTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd' });
+    let currentTile = darkTile;
+    currentTile.addTo(map);
+    function switchTileTheme(isLight) { map.removeLayer(currentTile); currentTile = isLight ? lightTile : darkTile; currentTile.addTo(map); }
+    
     // ---------- ДАННЫЕ ----------
     let polygonsLayer = null;
     let regionStatus = {};
@@ -827,15 +832,8 @@
     let epicenterEnabled = true;
     
     function applySettings() {
-        // Меняем фон карты через CSS класс на контейнере карты
-        const mapContainer = map.getContainer();
-        if(isLightTheme) {
-            document.body.classList.add('light-theme');
-            mapContainer.style.background = '#eef2f5';
-        } else {
-            document.body.classList.remove('light-theme');
-            mapContainer.style.background = '#0a0e1a';
-        }
+        if(isLightTheme) { document.body.classList.add('light-theme'); switchTileTheme(true); }
+        else { document.body.classList.remove('light-theme'); switchTileTheme(false); }
         
         const toolbar = document.getElementById('toolbar');
         const rulerPanel = document.getElementById('rulerPanel');
@@ -939,7 +937,7 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
-    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ ----------
+    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ (ТЕПЕРЬ С КРУПНЫМИ ИКОНКАМИ) ----------
     function showInstallModal() {
         const modal = document.createElement('div');
         modal.className = 'install-modal';
@@ -953,6 +951,7 @@
                             <p><strong>Нажмите кнопку «Поделиться»</strong></p>
                             <p>В Safari внизу экрана нажмите на иконку квадрата со стрелкой</p>
                         </div>
+                        <!-- ЗДЕСЬ МОЖЕТЕ ВСТАВИТЬ СВОЙ СКРИНШОТ: <img src="share.png" alt="share"> -->
                         <div class="install-step-img">📸 <em>Пример: иконка Share</em></div>
                     </div>
                     <div class="install-step-card">
@@ -961,6 +960,7 @@
                             <p><strong>Выберите «На экран “Домой”»</strong></p>
                             <p>Прокрутите меню вниз и нажмите на пункт «На экран “Домой”»</p>
                         </div>
+                        <!-- <img src="addtohome.png" alt="add to home"> -->
                         <div class="install-step-img">📸 <em>Пример: меню Safari</em></div>
                     </div>
                     <div class="install-step-card">
@@ -969,6 +969,7 @@
                             <p><strong>Нажмите «Добавить»</strong></p>
                             <p>При необходимости измените название и подтвердите установку</p>
                         </div>
+                        <!-- <img src="confirm.png" alt="confirm"> -->
                         <div class="install-step-img">📸 <em>Пример: подтверждение</em></div>
                     </div>
                 </div>
@@ -981,6 +982,7 @@
         `;
         document.body.appendChild(modal);
         
+        // Управление точками навигации
         const carousel = modal.querySelector('#installCarousel');
         const dotsContainer = modal.querySelector('#installDots');
         const cards = modal.querySelectorAll('.install-step-card');
