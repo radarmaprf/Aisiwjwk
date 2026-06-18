@@ -1,17 +1,17 @@
 {
-  "last_updated": "2026-06-18T14:40:55.235789+00:00",
+  "last_updated": "2026-06-18T14:45:44.972179+00:00",
   "regions": {
     "Москва": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.229928+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.966932+00:00"
     },
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.234481+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.971397+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -52,7 +52,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.233727+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.970914+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -83,7 +83,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.234617+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.971482+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -114,19 +114,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.233861+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.970996+00:00"
     },
     "Тульская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.234750+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.971561+00:00"
     },
     "Ярославская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.235096+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.971765+00:00"
     },
     "Краснодарский край": {
       "rocket": false,
@@ -142,7 +142,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-18T14:40:55.233365+00:00"
+      "droneAlert_time": "2026-06-18T14:45:44.970571+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
