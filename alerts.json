@@ -4,7 +4,7 @@
     "Москва": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Московская область": {
       "rocket": false,
