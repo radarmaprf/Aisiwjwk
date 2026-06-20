@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-20T08:15:42.287850+00:00",
+  "last_updated": "2026-06-20T08:20:44.447375+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.283709+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.443132+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -26,7 +26,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.283145+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.442578+00:00"
     },
     "Владимирская область": {
       "rocket": false,
@@ -77,13 +77,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.283324+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.442760+00:00"
     },
     "Пензенская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.287338+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.446830+00:00"
     },
     "Псковская область": {
       "rocket": false,
@@ -139,7 +139,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.287418+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.446913+00:00"
     },
     "Татарстан": {
       "rocket": false,
@@ -150,7 +150,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.286345+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.445816+00:00"
     },
     "Марий Эл": {
       "rocket": false,
@@ -166,7 +166,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.284253+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.443701+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
@@ -207,7 +207,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T08:15:42.286424+00:00"
+      "droneAlert_time": "2026-06-20T08:20:44.445896+00:00"
     },
     "Новосибирская область": {
       "rocket": false,
