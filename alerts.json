@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-20T13:45:45.306206+00:00",
+  "last_updated": "2026-06-20T13:50:43.734831+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.300319+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.728977+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -26,7 +26,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.299415+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.728177+00:00"
     },
     "Владимирская область": {
       "rocket": false,
@@ -67,7 +67,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.305672+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.734294+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -78,13 +78,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.299944+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.728592+00:00"
     },
     "Пензенская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.303984+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.732609+00:00"
     },
     "Псковская область": {
       "rocket": false,
@@ -105,7 +105,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.304978+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.733604+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -126,7 +126,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.306162+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.734786+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -142,7 +142,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.304066+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.732703+00:00"
     },
     "Татарстан": {
       "rocket": false,
@@ -168,7 +168,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T13:45:45.300882+00:00"
+      "droneAlert_time": "2026-06-20T13:50:43.729522+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
