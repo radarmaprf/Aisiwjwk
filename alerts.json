@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-20T05:40:40.306719+00:00",
+  "last_updated": "2026-06-20T05:45:38.608150+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.304114+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.605531+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -26,19 +26,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.303569+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.604988+00:00"
     },
     "Владимирская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.303994+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.605414+00:00"
     },
     "Воронежская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.303867+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.605297+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -49,7 +49,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.303571+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.604990+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -70,7 +70,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.304733+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.606162+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -81,7 +81,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.303748+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.605177+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -117,7 +117,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.302999+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.604417+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -148,19 +148,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.306353+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.607768+00:00"
     },
     "Башкортостан": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.306588+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.608006+00:00"
     },
     "Марий Эл": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.305228+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.606632+00:00"
     },
     "Чувашия": {
       "rocket": false,
@@ -171,19 +171,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.304652+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.606080+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.306509+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.607926+00:00"
     },
     "Самарская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.305803+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.607227+00:00"
     },
     "Саратовская область": {
       "rocket": false,
@@ -209,7 +209,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T05:40:40.306313+00:00"
+      "droneAlert_time": "2026-06-20T05:45:38.607728+00:00"
     },
     "Пермский край": {
       "rocket": false,
