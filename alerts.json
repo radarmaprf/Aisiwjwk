@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-20T06:00:52.953333+00:00",
+  "last_updated": "2026-06-20T06:05:38.270493+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.950407+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.267598+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -26,19 +26,18 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.949847+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.267062+00:00"
     },
     "Владимирская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.950285+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.267481+00:00"
     },
     "Воронежская область": {
       "rocket": false,
-      "droneAlert": true,
-      "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.950152+00:00"
+      "droneAlert": false,
+      "droneDanger": true
     },
     "Ивановская область": {
       "rocket": false,
@@ -49,7 +48,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.949849+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.267063+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -70,7 +69,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.951035+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.268206+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -81,7 +80,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.950028+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.267237+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -117,7 +116,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.949268+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.266507+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -148,19 +147,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.952688+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.269794+00:00"
     },
     "Башкортостан": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.953061+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.270161+00:00"
     },
     "Марий Эл": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.951542+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.268681+00:00"
     },
     "Чувашия": {
       "rocket": false,
@@ -171,7 +170,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.950952+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.268125+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
@@ -182,7 +181,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.952133+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.269254+00:00"
     },
     "Саратовская область": {
       "rocket": false,
@@ -208,13 +207,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.952647+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.269754+00:00"
     },
     "Пермский край": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-20T06:00:52.953140+00:00"
+      "droneAlert_time": "2026-06-20T06:05:38.270237+00:00"
     },
     "Новосибирская область": {
       "rocket": false,
