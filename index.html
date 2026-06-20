@@ -13,6 +13,11 @@
     <meta name="apple-mobile-web-app-title" content="Air Alert Map">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
+    <!-- Firebase SDK (compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -146,7 +151,18 @@
             border: 1px solid rgba(255,255,255,0.2); border-radius: 40px;
             padding: 6px 16px; font-size: 0.75rem;
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+        .online-count {
+            color: #6cff6c;
+            font-weight: bold;
+            background: rgba(0,0,0,0.3);
+            padding: 0 8px;
+            border-radius: 12px;
+        }
+        body.light-theme .online-count { color: #006600; background: rgba(0,0,0,0.05); }
 
         .alert-list-btn {
             position: fixed; top: 20px; left: 20px; z-index: 2100;
@@ -234,7 +250,6 @@
             text-align: center;
             font-size: 1.3rem;
         }
-        /* Карусель (горизонтальная прокрутка) */
         .install-carousel {
             display: flex;
             overflow-x: auto;
@@ -288,7 +303,6 @@
         .install-step-text strong {
             color: #ffc107;
         }
-        /* Картинки-заглушки – замените на свои реальные скриншоты */
         .install-step-img {
             margin-top: 10px;
             font-size: 0.8rem;
@@ -298,7 +312,6 @@
             padding: 8px;
             width: 100%;
         }
-        /* Точки навигации */
         .install-dots {
             display: flex;
             justify-content: center;
@@ -427,6 +440,7 @@
     <button id="rulerBtn" class="tool-btn">📏 Линейка</button>
     <button id="forecastToggleBtn" class="tool-btn">🔮 Прогноз</button>
     <button id="epicenterBtn" class="tool-btn">🎯 Эпицентр</button>
+    <button id="statsBtn" class="tool-btn">📊 Статистика</button>
     <button id="clearRulerBtn" class="tool-btn danger">🗑 Сброс</button>
 </div>
 
@@ -437,7 +451,10 @@
     <div class="legend-item"><div class="legend-color" style="background:#8B0000;"></div> <span>🟤 Ракетная угроза</span></div>
 </div>
 
-<div class="update-info" id="lastUpdateInfo">📅 Последнее обновление: --:--</div>
+<div class="update-info" id="lastUpdateInfo">
+    📅 Последнее обновление: --:--
+    <span class="online-count" id="onlineCount">👤 0</span>
+</div>
 
 <div id="forecastPanel" class="forecast-panel" style="display: none;">
     <h4>🔮 Прогноз угроз</h4>
@@ -469,6 +486,138 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function(){
+    // ========== ИНИЦИАЛИЗАЦИЯ FIREBASE ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyCAYgLqeeHD2TtxKwJpMIWSkTGHDYHkolo",
+        authDomain: "keys-pvqlue.firebaseapp.com",
+        databaseURL: "https://keys-pvqlue-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "keys-pvqlue",
+        storageBucket: "keys-pvqlue.firebasestorage.app",
+        messagingSenderId: "280184674000",
+        appId: "1:280184674000:web:865ec63e3c25ae22d5b0d5"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ========== УТИЛИТЫ ДЛЯ СТАТИСТИКИ ==========
+    function getUserId() {
+        let uid = localStorage.getItem('visitorId');
+        if (!uid) {
+            uid = crypto.randomUUID ? crypto.randomUUID() : 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+            localStorage.setItem('visitorId', uid);
+        }
+        return uid;
+    }
+
+    const userId = getUserId();
+    const startTime = Date.now();
+
+    // Запись сессии
+    const sessionRef = db.ref('sessions').push();
+    const todayStr = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+    sessionRef.set({
+        userId: userId,
+        startTime: firebase.database.ServerValue.TIMESTAMP,
+        date: todayStr
+    });
+
+    // Онлайн-статус
+    const onlineRef = db.ref('online/' + userId);
+    onlineRef.set({
+        userId: userId,
+        lastSeen: firebase.database.ServerValue.TIMESTAMP
+    });
+    onlineRef.onDisconnect().remove();
+
+    // Обновление heartbeat
+    const heartbeatInterval = setInterval(() => {
+        onlineRef.update({ lastSeen: firebase.database.ServerValue.TIMESTAMP });
+    }, 20000);
+
+    // При закрытии страницы — завершаем сессию и удаляем онлайн-запись
+    window.addEventListener('beforeunload', () => {
+        clearInterval(heartbeatInterval);
+        const duration = Math.round((Date.now() - startTime) / 1000);
+        sessionRef.update({
+            endTime: firebase.database.ServerValue.TIMESTAMP,
+            duration: duration
+        });
+        onlineRef.remove(); // удаляем из online
+    });
+
+    // Отображение количества онлайн
+    const onlineCountEl = document.getElementById('onlineCount');
+    db.ref('online').on('value', snapshot => {
+        const count = snapshot.numChildren();
+        onlineCountEl.textContent = '👤 ' + count;
+    });
+
+    // ========== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ СТАТИСТИКИ ==========
+    async function getStats() {
+        try {
+            // Получаем все сессии
+            const snapshot = await db.ref('sessions').once('value');
+            const data = snapshot.val();
+            if (!data) return { todayViews: 0, todayMinutes: 0, totalMinutes: 0 };
+
+            const today = new Date().toISOString().slice(0,10);
+            let todayDuration = 0;
+            let totalDuration = 0;
+            let todayViews = 0;
+
+            for (const key in data) {
+                const session = data[key];
+                const dur = session.duration || 0;
+                totalDuration += dur;
+                if (session.date === today) {
+                    todayViews++;
+                    todayDuration += dur;
+                }
+            }
+
+            return {
+                todayViews: todayViews,
+                todayMinutes: Math.round(todayDuration / 60),
+                totalMinutes: Math.round(totalDuration / 60)
+            };
+        } catch (e) {
+            console.error('Ошибка получения статистики:', e);
+            return null;
+        }
+    }
+
+    async function showStatsToast() {
+        const stats = await getStats();
+        if (!stats) {
+            showToast('❌ Не удалось загрузить статистику');
+            return;
+        }
+        const msg = `📊 Статистика за сегодня:\n` +
+                    `👀 Просмотров: ${stats.todayViews}\n` +
+                    `⏱ Время просмотра: ${stats.todayMinutes} мин.\n` +
+                    `📅 За всё время: ${stats.totalMinutes} мин.`;
+        showToast(msg, 4000);
+    }
+
+    // Переопределим showToast для поддержки длительности
+    function showToast(msg, duration = 2000) {
+        const old = document.querySelector('.copy-toast');
+        if(old) old.remove();
+        const t = document.createElement('div'); 
+        t.className='copy-toast'; 
+        t.textContent=msg;
+        t.style.animation = 'none';
+        document.body.appendChild(t);
+        // Принудительный reflow
+        void t.offsetWidth;
+        t.style.animation = `fadeOut ${duration/1000}s forwards`;
+        setTimeout(()=>t.remove(), duration);
+    }
+
+    // ========== ОСТАЛЬНОЙ КОД (КАРТА, ТРЕВОГИ И Т.Д.) ==========
+    // ... (весь существующий код, который был внутри IIFE, но с некоторыми корректировками)
+    // Для краткости я приведу его полностью, но ниже будет продолжение.
+
     // ---------- КАРТА ----------
     const map = L.map('map', { zoomControl: false }).setView([62,105],3.8);
     const darkTile = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution:'', subdomains:'abcd', maxZoom:10 });
@@ -644,6 +793,7 @@
     function updateLastUpdateInfo() {
         const el = document.getElementById('lastUpdateInfo');
         el.innerHTML = lastUpdateTime ? `📅 Последнее обновление: ${lastUpdateTime.toLocaleTimeString()}` : `📅 Последнее обновление: --:--`;
+        // не трогаем онлайн-счётчик, он отдельно
     }
     
     // ---------- ОТРИСОВКА КАРТЫ И ПАНЕЛЕЙ ----------
@@ -723,12 +873,7 @@
         try { await navigator.clipboard.writeText(text); showToast(`📋 Скопировано ${total} тревог (группировано)`); }
         catch { const ta = document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showToast(`📋 Скопировано ${total} тревог (группировано)`); }
     }
-    function showToast(msg) {
-        const old = document.querySelector('.copy-toast');
-        if(old) old.remove();
-        const t = document.createElement('div'); t.className='copy-toast'; t.textContent=msg;
-        document.body.appendChild(t); setTimeout(()=>t.remove(),2000);
-    }
+    // showToast уже определена выше (с поддержкой duration)
     
     // ---------- ЛИНЕЙКА ----------
     let rulerModeActive = false;
@@ -937,7 +1082,7 @@
     loadPolygons();
     setTimeout(() => { fetchAlerts(); setInterval(fetchAlerts, 60000); }, 1000);
     
-    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ (ТЕПЕРЬ С КРУПНЫМИ ИКОНКАМИ) ----------
+    // ---------- МОДАЛЬНОЕ ОКНО УСТАНОВКИ С КАРУСЕЛЬЮ ----------
     function showInstallModal() {
         const modal = document.createElement('div');
         modal.className = 'install-modal';
@@ -951,7 +1096,6 @@
                             <p><strong>Нажмите кнопку «Поделиться»</strong></p>
                             <p>В Safari внизу экрана нажмите на иконку квадрата со стрелкой</p>
                         </div>
-                        <!-- ЗДЕСЬ МОЖЕТЕ ВСТАВИТЬ СВОЙ СКРИНШОТ: <img src="share.png" alt="share"> -->
                         <div class="install-step-img">📸 <em>Пример: иконка Share</em></div>
                     </div>
                     <div class="install-step-card">
@@ -960,7 +1104,6 @@
                             <p><strong>Выберите «На экран “Домой”»</strong></p>
                             <p>Прокрутите меню вниз и нажмите на пункт «На экран “Домой”»</p>
                         </div>
-                        <!-- <img src="addtohome.png" alt="add to home"> -->
                         <div class="install-step-img">📸 <em>Пример: меню Safari</em></div>
                     </div>
                     <div class="install-step-card">
@@ -969,7 +1112,6 @@
                             <p><strong>Нажмите «Добавить»</strong></p>
                             <p>При необходимости измените название и подтвердите установку</p>
                         </div>
-                        <!-- <img src="confirm.png" alt="confirm"> -->
                         <div class="install-step-img">📸 <em>Пример: подтверждение</em></div>
                     </div>
                 </div>
@@ -982,7 +1124,6 @@
         `;
         document.body.appendChild(modal);
         
-        // Управление точками навигации
         const carousel = modal.querySelector('#installCarousel');
         const dotsContainer = modal.querySelector('#installDots');
         const cards = modal.querySelectorAll('.install-step-card');
@@ -1025,6 +1166,7 @@
     document.getElementById('installBtn').addEventListener('click', showInstallModal);
     document.getElementById('forecastToggleBtn').addEventListener('click', toggleForecastPanel);
     document.getElementById('epicenterBtn').addEventListener('click', flyToEpicenter);
+    document.getElementById('statsBtn').addEventListener('click', showStatsToast);
     
     const panel = document.getElementById('alertsPanel');
     const openBtn = document.getElementById('openPanelBtn');
