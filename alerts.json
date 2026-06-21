@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-21T10:20:43.848031+00:00",
+  "last_updated": "2026-06-21T10:25:38.142638+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.847554+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.142069+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -46,7 +46,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.847756+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.142276+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -77,13 +77,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.847681+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.142197+00:00"
     },
     "Пензенская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.842660+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.137019+00:00"
     },
     "Псковская область": {
       "rocket": false,
@@ -99,7 +99,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.847796+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.142317+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -115,7 +115,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.847636+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.142151+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -281,7 +281,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T10:20:43.846394+00:00"
+      "droneAlert_time": "2026-06-21T10:25:38.140878+00:00"
     },
     "Дагестан": {
       "rocket": false,
@@ -316,7 +316,7 @@
     "Адыгея": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     }
   }
 }
