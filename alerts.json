@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-21T18:40:42.738797+00:00",
+  "last_updated": "2026-06-21T18:45:41.692608+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
@@ -45,7 +45,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.738092+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.691832+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -76,13 +76,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.737016+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.692568+00:00"
     },
     "Пензенская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.731671+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.685520+00:00"
     },
     "Псковская область": {
       "rocket": false,
@@ -98,7 +98,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.737138+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.690903+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -124,13 +124,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.738760+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.692469+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.738293+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.692027+00:00"
     },
     "Ростовская область": {
       "rocket": false,
@@ -281,7 +281,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-21T18:40:42.735667+00:00"
+      "droneAlert_time": "2026-06-21T18:45:41.689426+00:00"
     },
     "Дагестан": {
       "rocket": false,
