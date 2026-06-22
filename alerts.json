@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-22T09:20:44.574975+00:00",
+  "last_updated": "2026-06-22T09:25:43.449242+00:00",
   "regions": {
     "Московская область": {
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573809+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447487+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,7 +31,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.574087+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447891+00:00"
     },
     "Воронежская область": {
       "rocket": true,
@@ -47,7 +47,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573680+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447319+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -78,7 +78,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573930+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447647+00:00"
     },
     "Пензенская область": {
       "rocket": true,
@@ -94,13 +94,13 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573962+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447689+00:00"
     },
     "Смоленская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573778+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447446+00:00"
     },
     "Тамбовская область": {
       "rocket": true,
@@ -116,7 +116,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-22T09:20:44.573614+00:00"
+      "droneAlert_time": "2026-06-22T09:25:43.447241+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -156,7 +156,7 @@
     "Марий Эл": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Чувашия": {
       "rocket": true,
@@ -181,7 +181,7 @@
     "Саратовская область": {
       "rocket": true,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Ульяновская область": {
       "rocket": true,
