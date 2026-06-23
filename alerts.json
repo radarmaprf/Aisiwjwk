@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-23T07:45:41.245820+00:00",
+  "last_updated": "2026-06-23T07:50:43.046480+00:00",
   "regions": {
     "Московская область": {
       "rocket": true,
@@ -32,7 +32,7 @@
       "droneDanger": false
     },
     "Воронежская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -57,7 +57,7 @@
       "droneDanger": true
     },
     "Липецкая область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -97,7 +97,7 @@
       "droneDanger": false
     },
     "Тамбовская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -130,7 +130,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-23T07:45:41.245187+00:00"
+      "droneAlert_time": "2026-06-23T07:50:43.045586+00:00"
     },
     "Волгоградская область": {
       "rocket": true,
@@ -143,7 +143,7 @@
       "droneDanger": false
     },
     "Башкортостан": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -193,7 +193,7 @@
       "droneDanger": false
     },
     "Оренбургская область": {
-      "rocket": false,
+      "rocket": true,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -276,7 +276,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-23T07:45:41.243488+00:00"
+      "droneAlert_time": "2026-06-23T07:50:43.043791+00:00"
     },
     "Дагестан": {
       "rocket": false,
