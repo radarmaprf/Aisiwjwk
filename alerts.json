@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-24T19:05:39.964261+00:00",
+  "last_updated": "2026-06-24T19:10:43.244833+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.963911+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.244498+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,7 +31,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.959564+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.241147+00:00"
     },
     "Воронежская область": {
       "rocket": false,
@@ -47,7 +47,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.963952+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.244538+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -63,13 +63,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.963702+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.244344+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.960800+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.242113+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -80,7 +80,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.962655+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.243542+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -101,7 +101,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-24T19:05:39.963379+00:00"
+      "droneAlert_time": "2026-06-24T19:10:43.244091+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
