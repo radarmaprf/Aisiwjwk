@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-25T21:15:39.857862+00:00",
+  "last_updated": "2026-06-25T21:20:44.657210+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
@@ -29,7 +29,7 @@
     "Владимирская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Воронежская область": {
       "rocket": false,
@@ -39,13 +39,13 @@
     "Ивановская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Калужская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T21:15:39.857471+00:00"
+      "droneAlert_time": "2026-06-25T21:20:44.656618+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -76,7 +76,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T21:15:39.857821+00:00"
+      "droneAlert_time": "2026-06-25T21:20:44.657029+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -97,7 +97,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T21:15:39.857549+00:00"
+      "droneAlert_time": "2026-06-25T21:20:44.656711+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -117,7 +117,7 @@
     "Ярославская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Краснодарский край": {
       "rocket": false,
@@ -137,7 +137,7 @@
     "Волгоградская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Татарстан": {
       "rocket": false,
@@ -278,7 +278,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T21:15:39.854374+00:00"
+      "droneAlert_time": "2026-06-25T21:20:44.653472+00:00"
     },
     "Дагестан": {
       "rocket": false,
