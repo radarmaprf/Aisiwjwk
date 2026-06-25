@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-25T15:20:43.172302+00:00",
+  "last_updated": "2026-06-25T15:25:35.793049+00:00",
   "regions": {
     "Московская область": {
       "rocket": true,
@@ -42,7 +42,7 @@
       "droneDanger": false
     },
     "Калужская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -97,7 +97,7 @@
       "droneDanger": false
     },
     "Тамбовская область": {
-      "rocket": true,
+      "rocket": false,
       "droneAlert": false,
       "droneDanger": false
     },
@@ -275,7 +275,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T15:20:43.169846+00:00"
+      "droneAlert_time": "2026-06-25T15:25:35.790463+00:00"
     },
     "Дагестан": {
       "rocket": false,
