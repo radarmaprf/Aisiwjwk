@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-25T05:50:40.801566+00:00",
+  "last_updated": "2026-06-25T05:55:33.348994+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
@@ -95,7 +95,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T05:50:40.798544+00:00"
+      "droneAlert_time": "2026-06-25T05:55:33.345964+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -146,7 +146,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T05:50:40.800976+00:00"
+      "droneAlert_time": "2026-06-25T05:55:33.348385+00:00"
     },
     "Марий Эл": {
       "rocket": false,
@@ -197,7 +197,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T05:50:40.799893+00:00"
+      "droneAlert_time": "2026-06-25T05:55:33.347296+00:00"
     },
     "Пермский край": {
       "rocket": false,
@@ -278,7 +278,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-25T05:50:40.800723+00:00"
+      "droneAlert_time": "2026-06-25T05:55:33.348132+00:00"
     },
     "Дагестан": {
       "rocket": false,
