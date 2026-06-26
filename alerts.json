@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-26T16:50:50.782990+00:00",
+  "last_updated": "2026-06-26T16:55:35.423994+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.781653+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.422569+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -46,7 +46,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.781131+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.422048+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -67,7 +67,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.781975+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.422886+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -78,7 +78,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.782720+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.423637+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -104,7 +104,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.778369+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.419383+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -115,7 +115,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.782840+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.423755+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -316,7 +316,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T16:50:50.782915+00:00"
+      "droneAlert_time": "2026-06-26T16:55:35.423830+00:00"
     }
   }
 }
