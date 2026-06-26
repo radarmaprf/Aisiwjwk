@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-26T11:15:37.141334+00:00",
+  "last_updated": "2026-06-26T11:20:40.113369+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.141109+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.113144+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -46,7 +46,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.140622+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.112631+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -77,7 +77,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.141261+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.113297+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -98,13 +98,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.140661+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.112671+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.137884+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.109887+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -115,7 +115,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.140879+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.112914+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -281,7 +281,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T11:15:37.135873+00:00"
+      "droneAlert_time": "2026-06-26T11:20:40.107852+00:00"
     },
     "Дагестан": {
       "rocket": false,
