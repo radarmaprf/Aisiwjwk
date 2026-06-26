@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-26T03:15:40.588005+00:00",
+  "last_updated": "2026-06-26T03:20:39.603385+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.587845+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.603307+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -46,7 +46,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.584385+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.599718+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -77,7 +77,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.584962+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.600287+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -93,19 +93,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.586712+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.601999+00:00"
     },
     "Смоленская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.581638+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.597032+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.586111+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.601426+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -124,9 +124,8 @@
     },
     "Краснодарский край": {
       "rocket": false,
-      "droneAlert": true,
-      "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.586599+00:00"
+      "droneAlert": false,
+      "droneDanger": false
     },
     "Ставропольский край": {
       "rocket": false,
@@ -282,7 +281,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-26T03:15:40.584032+00:00"
+      "droneAlert_time": "2026-06-26T03:20:39.599393+00:00"
     },
     "Дагестан": {
       "rocket": false,
@@ -317,7 +316,7 @@
     "Адыгея": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     }
   }
 }
