@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-27T06:30:45.226974+00:00",
+  "last_updated": "2026-06-27T06:35:35.304376+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T06:30:45.224536+00:00"
+      "droneAlert_time": "2026-06-27T06:35:35.301833+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -36,7 +36,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T06:30:45.226794+00:00"
+      "droneAlert_time": "2026-06-27T06:35:35.304195+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -62,7 +62,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T06:30:45.226797+00:00"
+      "droneAlert_time": "2026-06-27T06:35:35.304197+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
@@ -98,7 +98,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T06:30:45.224738+00:00"
+      "droneAlert_time": "2026-06-27T06:35:35.302032+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
