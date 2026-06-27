@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-27T05:40:43.836440+00:00",
+  "last_updated": "2026-06-27T05:45:41.388777+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.834526+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.386783+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -35,7 +35,7 @@
     "Воронежская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": false
+      "droneDanger": true
     },
     "Ивановская область": {
       "rocket": false,
@@ -46,7 +46,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.836281+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.388549+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -67,7 +67,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.832232+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.384522+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -78,7 +78,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.833428+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.385692+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -99,7 +99,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.834728+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.386983+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -115,7 +115,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-27T05:40:43.836241+00:00"
+      "droneAlert_time": "2026-06-27T05:45:41.388509+00:00"
     },
     "Ярославская область": {
       "rocket": false,
