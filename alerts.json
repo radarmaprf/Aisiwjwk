@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-28T01:05:36.024321+00:00",
+  "last_updated": "2026-06-28T01:10:39.183280+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.023374+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.182321+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,13 +31,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.020458+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.177419+00:00"
     },
     "Воронежская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.023216+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.182163+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -68,7 +68,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.018894+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.175422+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -79,7 +79,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.023334+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.182281+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -126,7 +126,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.023860+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.182833+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -137,7 +137,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T01:05:36.023295+00:00"
+      "droneAlert_time": "2026-06-28T01:10:39.182243+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
