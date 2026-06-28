@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-28T00:00:53.225434+00:00",
+  "last_updated": "2026-06-28T00:05:34.096866+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.224730+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.096133+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,13 +31,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.221756+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.093185+00:00"
     },
     "Воронежская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.224567+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.095970+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -68,7 +68,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.220170+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.091612+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -79,7 +79,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.224689+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.096092+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -105,7 +105,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.218434+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.089892+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -126,7 +126,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.225236+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.096643+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -137,7 +137,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T00:00:53.224648+00:00"
+      "droneAlert_time": "2026-06-28T00:05:34.096052+00:00"
     },
     "Волгоградская область": {
       "rocket": true,
