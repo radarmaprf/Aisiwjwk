@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-28T02:10:40.905204+00:00",
+  "last_updated": "2026-06-28T02:15:42.585005+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.904044+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.583787+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -31,13 +31,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.901118+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.580618+00:00"
     },
     "Воронежская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.903884+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.583623+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -68,7 +68,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.899220+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.578987+00:00"
     },
     "Новгородская область": {
       "rocket": false,
@@ -79,7 +79,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.904003+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.583745+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -125,7 +125,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.904526+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.584306+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -136,7 +136,7 @@
       "rocket": true,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-28T02:10:40.905135+00:00"
+      "droneAlert_time": "2026-06-28T02:15:42.584925+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
