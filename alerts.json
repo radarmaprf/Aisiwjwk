@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-29T23:00:57.294904+00:00",
+  "last_updated": "2026-06-29T23:05:36.730003+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294078+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729156+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -36,7 +36,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294669+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729756+00:00"
     },
     "Ивановская область": {
       "rocket": false,
@@ -47,7 +47,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294516+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729598+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -63,7 +63,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294245+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729309+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
@@ -79,7 +79,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294438+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729520+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -95,19 +95,19 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294209+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729272+00:00"
     },
     "Смоленская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.289893+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.724945+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294867+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729957+00:00"
     },
     "Тверская область": {
       "rocket": false,
@@ -118,7 +118,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.294001+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.729079+00:00"
     },
     "Ярославская область": {
       "rocket": false,
@@ -129,25 +129,25 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.293604+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.728678+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.293847+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.728923+00:00"
     },
     "Ростовская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.293767+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.728842+00:00"
     },
     "Волгоградская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.293769+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.728844+00:00"
     },
     "Татарстан": {
       "rocket": false,
@@ -288,7 +288,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.292117+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.727161+00:00"
     },
     "Дагестан": {
       "rocket": false,
@@ -324,7 +324,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T23:00:57.293722+00:00"
+      "droneAlert_time": "2026-06-29T23:05:36.728796+00:00"
     }
   }
 }
