@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-29T04:10:41.981059+00:00",
+  "last_updated": "2026-06-29T04:15:40.604091+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
@@ -45,7 +45,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T04:10:41.979559+00:00"
+      "droneAlert_time": "2026-06-29T04:15:40.602620+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -76,7 +76,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T04:10:41.979368+00:00"
+      "droneAlert_time": "2026-06-29T04:15:40.602433+00:00"
     },
     "Пензенская область": {
       "rocket": false,
@@ -97,7 +97,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T04:10:41.979770+00:00"
+      "droneAlert_time": "2026-06-29T04:15:40.602809+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -108,7 +108,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T04:10:41.979073+00:00"
+      "droneAlert_time": "2026-06-29T04:15:40.602147+00:00"
     },
     "Тульская область": {
       "rocket": false,
@@ -279,7 +279,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-29T04:10:41.979213+00:00"
+      "droneAlert_time": "2026-06-29T04:15:40.602280+00:00"
     },
     "Дагестан": {
       "rocket": false,
