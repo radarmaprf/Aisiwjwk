@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-30T11:30:45.035746+00:00",
+  "last_updated": "2026-06-30T11:34:49.155714+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T11:30:45.035547+00:00"
+      "droneAlert_time": "2026-06-30T11:34:49.155447+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -61,7 +61,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T11:30:45.030586+00:00"
+      "droneAlert_time": "2026-06-30T11:34:49.149382+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
@@ -97,7 +97,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T11:30:45.035191+00:00"
+      "droneAlert_time": "2026-06-30T11:34:49.154971+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -123,7 +123,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T11:30:45.035711+00:00"
+      "droneAlert_time": "2026-06-30T11:34:49.155667+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -279,7 +279,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T11:30:45.035314+00:00"
+      "droneAlert_time": "2026-06-30T11:34:49.155132+00:00"
     },
     "Дагестан": {
       "rocket": false,
