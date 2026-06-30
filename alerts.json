@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-06-30T08:45:34.485920+00:00",
+  "last_updated": "2026-06-30T08:47:13.954495+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.484068+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.952654+00:00"
     },
     "Санкт-Петербург": {
       "rocket": false,
@@ -61,7 +61,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.481153+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.949728+00:00"
     },
     "Нижегородская область": {
       "rocket": false,
@@ -92,13 +92,13 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.480883+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.949453+00:00"
     },
     "Смоленская область": {
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.485721+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.954298+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
@@ -124,7 +124,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.485845+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.954420+00:00"
     },
     "Ставропольский край": {
       "rocket": false,
@@ -165,7 +165,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.485766+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.954341+00:00"
     },
     "Удмуртская Республика": {
       "rocket": false,
@@ -281,7 +281,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-06-30T08:45:34.485847+00:00"
+      "droneAlert_time": "2026-06-30T08:47:13.954421+00:00"
     },
     "Дагестан": {
       "rocket": false,
