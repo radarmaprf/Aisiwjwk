@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-01T08:05:35.603653+00:00",
+  "last_updated": "2026-07-01T08:10:40.649874+00:00",
   "regions": {
     "Московская область": {
       "rocket": false,
@@ -45,7 +45,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-07-01T08:05:35.600958+00:00"
+      "droneAlert_time": "2026-07-01T08:10:40.647216+00:00"
     },
     "Костромская область": {
       "rocket": false,
@@ -94,13 +94,14 @@
     },
     "Смоленская область": {
       "rocket": false,
-      "droneAlert": false,
-      "droneDanger": true
+      "droneAlert": true,
+      "droneDanger": false,
+      "droneAlert_time": "2026-07-01T08:10:40.645825+00:00"
     },
     "Тамбовская область": {
       "rocket": false,
       "droneAlert": false,
-      "droneDanger": true
+      "droneDanger": false
     },
     "Тверская область": {
       "rocket": false,
@@ -196,7 +197,7 @@
       "rocket": false,
       "droneAlert": true,
       "droneDanger": false,
-      "droneAlert_time": "2026-07-01T08:05:35.602318+00:00"
+      "droneAlert_time": "2026-07-01T08:10:40.648616+00:00"
     },
     "Пермский край": {
       "rocket": false,
